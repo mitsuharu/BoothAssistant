@@ -4,11 +4,11 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Get started
 
-0. Add API Key and set GitHub secret
+0. Add `.env.local`
 
-```shell
-export OPENAI_API_KEY="your_api_key_here"
-```
+   ```shell
+   OPENAI_API_KEY=sk-...
+   ```
 
 1. Install dependencies
 
