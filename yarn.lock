@@ -2680,6 +2680,7 @@ __metadata:
     expo-symbols: "npm:~0.4.5"
     expo-system-ui: "npm:~5.0.9"
     expo-web-browser: "npm:~14.2.0"
+    openai: "npm:^5.5.1"
     react: "npm:19.0.0"
     react-dom: "npm:19.0.0"
     react-native: "npm:0.79.4"
@@ -5439,6 +5440,23 @@ __metadata:
     is-docker: "npm:^2.1.1"
     is-wsl: "npm:^2.2.0"
   checksum: 10c0/bb6b3a58401dacdb0aad14360626faf3fb7fba4b77816b373495988b724fb48941cad80c1b65d62bb31a17609b2cd91c41a181602caea597ca80dfbcc27e84c9
+  languageName: node
+  linkType: hard
+
+"openai@npm:^5.5.1":
+  version: 5.5.1
+  resolution: "openai@npm:5.5.1"
+  peerDependencies:
+    ws: ^8.18.0
+    zod: ^3.23.8
+  peerDependenciesMeta:
+    ws:
+      optional: true
+    zod:
+      optional: true
+  bin:
+    openai: bin/cli
+  checksum: 10c0/723a42b8fc8b4ac49f674f014c77d5e3d739469affb11759861cfa5471d608e10f92a7d446440149eb6ce1328ee51b3afa1a91cdfb938b94100fb99d512c7f3c
   languageName: node
   linkType: hard
 
