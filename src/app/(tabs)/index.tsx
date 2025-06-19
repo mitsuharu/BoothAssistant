@@ -1,12 +1,28 @@
 import { Image } from 'expo-image'
+import { useEffect } from 'react'
 import { Platform, StyleSheet } from 'react-native'
-
 import { HelloWave } from '@/components/HelloWave'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
+import { useAssistant } from '@/hooks/useAssistant'
 
 export default function HomeScreen() {
+  const assistant = useAssistant()
+
+  useEffect(() => {
+    console.log('HomeScreen mounted')
+
+    // assistant
+    //   .fetchResponse('株式会社ゆめみの有給取り放題について教えてください')
+    //   .then((response) => {
+    //     console.log('Assistant response:', response)
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error fetching response:', error)
+    //   })
+  })
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
