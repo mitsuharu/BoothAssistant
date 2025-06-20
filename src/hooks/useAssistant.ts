@@ -14,13 +14,13 @@ type AssistantType = {
 
 export const useAssistant = (): AssistantType => {
   const apiKey = Constants.expoConfig?.extra?.OPENAI_API_KEY
-  const client = new OpenAI({ apiKey: apiKey })
 
   const [status, setStatus] = useState<Status>('idle')
   const [response, setResponse] = useState<string | undefined>(undefined)
 
   const fetchResponse = useCallback(
     async (input: string) => {
+      const client = new OpenAI({ apiKey: apiKey })
       try {
         // https://platform.openai.com/docs/guides/text?api-mode=responses
         const result = await client.responses.create({
@@ -47,7 +47,7 @@ export const useAssistant = (): AssistantType => {
         throw error
       }
     },
-    [client],
+    [apiKey],
   )
 
   return { status, response, fetchResponse }
