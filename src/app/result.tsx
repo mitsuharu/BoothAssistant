@@ -1,8 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import * as Speech from 'expo-speech'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
-
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { useAssistant } from '@/hooks/useAssistant'
@@ -11,27 +10,44 @@ import { addHistoryItem } from '@/utils/storage'
 
 export default function ResultScreen() {
   const router = useRouter()
-  const params = useLocalSearchParams<{
+  const { question, answer, isNew } = useLocalSearchParams<{
     question: string
     answer?: string
     timestamp?: string
     isNew?: string
   }>()
-  const { response, status } = useAssistant()
+  const { response, status, fetchResponse } = useAssistant()
 
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [currentAnswer, setCurrentAnswer] = useState('')
 
-  const question = params.question || ''
-  const isNewQuestion = params.isNew === 'true'
+  const isNewQuestion = useMemo(() => isNew === 'true', [isNew])
+  const isLoading = useMemo(() => status === 'loading', [status])
+
+  const fetchAnswer = useCallback(
+    async (question: string) => {
+      try {
+        await fetchResponse(question)
+      } catch (error: any) {
+        console.warn(error)
+      }
+    },
+    [fetchResponse],
+  )
 
   useEffect(() => {
-    if (isNewQuestion && response) {
+    if (status === 'success' && !!response) {
       setCurrentAnswer(response)
-    } else if (params.answer) {
-      setCurrentAnswer(params.answer)
     }
-  }, [isNewQuestion, response, params.answer])
+  }, [response, status])
+
+  useEffect(() => {
+    if (isNewQuestion) {
+      fetchAnswer(question)
+    } else if (answer) {
+      setCurrentAnswer(answer)
+    }
+  }, [isNewQuestion, answer, fetchAnswer, question])
 
   const handleSpeech = useCallback(async () => {
     if (!currentAnswer) return
@@ -74,8 +90,6 @@ export default function ResultScreen() {
 
     router.replace('/')
   }, [isSpeaking, isNewQuestion, currentAnswer, question, router])
-
-  const isLoading = status === 'loading'
 
   return (
     <ThemedView style={styles.container}>

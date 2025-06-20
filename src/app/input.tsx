@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router'
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
   Alert,
   KeyboardAvoidingView,
@@ -10,14 +10,11 @@ import {
   Text,
   TextInput,
 } from 'react-native'
-
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
-import { useAssistant } from '@/hooks/useAssistant'
 
 export default function InputScreen() {
   const router = useRouter()
-  const { fetchResponse, status } = useAssistant()
   const [inputText, setInputText] = useState('')
 
   const handleQuestionSubmit = useCallback(async () => {
@@ -27,7 +24,6 @@ export default function InputScreen() {
     }
 
     try {
-      // await fetchResponse(inputText.trim())
       router.push({
         pathname: '/result',
         params: {
@@ -39,8 +35,6 @@ export default function InputScreen() {
       Alert.alert('エラー', '質問の処理に失敗しました')
     }
   }, [inputText, router])
-
-  const isLoading = status === 'loading'
 
   return (
     <KeyboardAvoidingView
@@ -66,7 +60,6 @@ export default function InputScreen() {
               multiline
               numberOfLines={8}
               textAlignVertical='top'
-              editable={!isLoading}
             />
           </ThemedView>
 
@@ -82,21 +75,15 @@ export default function InputScreen() {
           <Pressable
             style={[
               styles.submitButton,
-              (isLoading || !inputText.trim()) && styles.submitButtonDisabled,
+              !inputText.trim() && styles.submitButtonDisabled,
             ]}
             onPress={handleQuestionSubmit}
-            disabled={isLoading || !inputText.trim()}
+            disabled={!inputText.trim()}
           >
-            <Text style={styles.submitButtonText}>
-              {isLoading ? '処理中...' : '質問する'}
-            </Text>
+            <Text style={styles.submitButtonText}>{'質問する'}</Text>
           </Pressable>
 
-          <Pressable
-            style={styles.cancelButton}
-            onPress={() => router.back()}
-            disabled={isLoading}
-          >
+          <Pressable style={styles.cancelButton} onPress={() => router.back()}>
             <Text style={styles.cancelButtonText}>キャンセル</Text>
           </Pressable>
         </ThemedView>

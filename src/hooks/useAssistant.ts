@@ -22,6 +22,8 @@ export const useAssistant = (): AssistantType => {
     async (input: string) => {
       const client = new OpenAI({ apiKey: apiKey })
       try {
+        setStatus('loading')
+
         // https://platform.openai.com/docs/guides/text?api-mode=responses
         const result = await client.responses.create({
           model: 'gpt-4.1',
