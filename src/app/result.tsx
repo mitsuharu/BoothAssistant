@@ -45,7 +45,10 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
   const colorScheme = useColorScheme()
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.questionContainer}>
           <Text style={styles.sectionTitle}>質問</Text>
           <View style={styles.questionBox}>
@@ -54,7 +57,24 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
         </View>
 
         <View style={styles.answerContainer}>
-          <Text style={styles.sectionTitle}>回答</Text>
+          <View style={styles.answerHeader}>
+            <Text style={styles.sectionTitle}>回答</Text>
+            {currentAnswer && !isLoading && (
+              <Button
+                style={[
+                  styles.speechButton,
+                  {
+                    backgroundColor: isSpeaking
+                      ? COLOR(colorScheme).FUNCTIONAL.WARNING
+                      : COLOR(colorScheme).FUNCTIONAL.SUCCESS,
+                  },
+                ]}
+                onPress={onSpeech}
+                text={isSpeaking ? '🔊 停止' : '🔊 再生'}
+                textStyle={styles.speechButtonText}
+              />
+            )}
+          </View>
           <View style={styles.answerBox}>
             {isLoading ? (
               <Text style={styles.loadingText}>回答を生成中...</Text>
@@ -65,24 +85,6 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
             )}
           </View>
         </View>
-
-        {currentAnswer && !isLoading && (
-          <View style={styles.speechContainer}>
-            <Button
-              style={[
-                styles.speechButton,
-                {
-                  backgroundColor: isSpeaking
-                    ? COLOR(colorScheme).FUNCTIONAL.WARNING
-                    : COLOR(colorScheme).FUNCTIONAL.SUCCESS,
-                },
-              ]}
-              onPress={onSpeech}
-              text={isSpeaking ? '🔊 停止' : '🔊 音声で聞く'}
-              textStyle={styles.speechButtonText}
-            />
-          </View>
-        )}
       </ScrollView>
 
       <SafeAreaView>
@@ -219,6 +221,12 @@ const useStyles = makeStyles(useColorScheme, (colorScheme) => {
     answerContainer: styleType<ViewStyle>({
       marginBottom: 24,
     }),
+    answerHeader: styleType<ViewStyle>({
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 12,
+    }),
     sectionTitle: styleType<TextStyle>({
       fontSize: 18,
       fontWeight: '600',
@@ -260,20 +268,16 @@ const useStyles = makeStyles(useColorScheme, (colorScheme) => {
       fontSize: 16,
       color: COLOR(colorScheme).FUNCTIONAL.ERROR,
     }),
-    speechContainer: styleType<ViewStyle>({
-      alignItems: 'center',
-      marginBottom: 24,
-    }),
     speechButton: styleType<ViewStyle>({
-      paddingVertical: 12,
-      paddingHorizontal: 24,
-      borderRadius: 8,
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      borderRadius: 6,
       alignItems: 'center',
-      minWidth: 150,
+      minWidth: 40,
     }),
     speechButtonText: styleType<TextStyle>({
       color: COLOR(colorScheme).TEXT.EMPHASIZE,
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: '600',
     }),
     buttonContainer: styleType<ViewStyle>({

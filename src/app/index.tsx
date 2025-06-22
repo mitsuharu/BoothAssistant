@@ -66,6 +66,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
     [onHistoryItemPress, onDeleteItem, styles],
   )
 
+  const keyExtractor = useCallback((item: HistoryItem) => item.id, [])
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -85,7 +87,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           <FlashList
             data={history}
             renderItem={renderHistoryItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={keyExtractor}
             estimatedItemSize={80}
             showsVerticalScrollIndicator={false}
           />
