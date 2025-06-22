@@ -2,12 +2,12 @@ import { useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
 import {
   Alert,
-  Pressable,
   ScrollView,
   StyleSheet,
   type TextStyle,
   type ViewStyle,
 } from 'react-native'
+import { Button } from '@/components/Button'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { clearAllHistory } from '@/utils/storage'
@@ -30,14 +30,14 @@ const SettingsComponent: React.FC<SettingsComponentProps> = ({
         <ThemedView style={styles.section}>
           <ThemedText style={styles.sectionTitle}>データ管理</ThemedText>
 
-          <Pressable
+          <Button
             style={[
               styles.settingItem,
               styles.destructiveItem,
               isDeleting && styles.disabledItem,
             ]}
             onPress={onClearAllHistory}
-            disabled={isDeleting}
+            inactive={isDeleting}
           >
             <ThemedView style={styles.settingItemContent}>
               <ThemedText style={styles.destructiveText}>
@@ -47,7 +47,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = ({
                 保存されているすべての質問と回答を削除します
               </ThemedText>
             </ThemedView>
-          </Pressable>
+          </Button>
         </ThemedView>
 
         <ThemedView style={styles.section}>

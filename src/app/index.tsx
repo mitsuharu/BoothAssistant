@@ -4,14 +4,13 @@ import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import {
   Alert,
-  Pressable,
   StyleSheet,
-  Text,
   type TextStyle,
   View,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Button } from '@/components/Button'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import type { HistoryItem } from '@/types/history'
@@ -38,7 +37,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const renderHistoryItem = useCallback(
     ({ item }: { item: HistoryItem }) => (
       <View style={styles.itemContainer}>
-        <Pressable
+        <Button
           style={styles.historyItem}
           onPress={() => onHistoryItemPress(item)}
           onLongPress={() => onDeleteItem(item)}
@@ -51,13 +50,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
               {new Date(item.timestamp).toLocaleString('ja-JP')}
             </ThemedText>
           </View>
-          <Pressable
+          <Button
             style={styles.deleteButton}
             onPress={() => onDeleteItem(item)}
           >
             <Ionicons name='trash' size={20} color='#FF3B30' />
-          </Pressable>
-        </Pressable>
+          </Button>
+        </Button>
       </View>
     ),
     [onHistoryItemPress, onDeleteItem],
@@ -93,9 +92,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
       <SafeAreaView>
         <ThemedView style={styles.buttonContainer}>
-          <Pressable style={styles.inputButton} onPress={onInputPress}>
-            <Text style={styles.inputButtonText}>新しい質問をする</Text>
-          </Pressable>
+          <Button
+            style={styles.inputButton}
+            onPress={onInputPress}
+            text='新しい質問をする'
+            textStyle={styles.inputButtonText}
+          />
         </ThemedView>
       </SafeAreaView>
     </ThemedView>
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: 12,
     borderRadius: 6,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'transparent',
   }),
   buttonContainer: styleType<ViewStyle>({
     paddingTop: 16,

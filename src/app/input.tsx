@@ -4,15 +4,14 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   type TextStyle,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Button } from '@/components/Button'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { styleType } from '@/utils/styles'
@@ -68,20 +67,23 @@ const InputComponent: React.FC<InputComponentProps> = ({
 
         <SafeAreaView>
           <ThemedView style={styles.buttonContainer}>
-            <Pressable
+            <Button
               style={[
                 styles.submitButton,
                 !inputText.trim() && styles.submitButtonDisabled,
               ]}
               onPress={onQuestionSubmit}
-              disabled={!inputText.trim()}
-            >
-              <Text style={styles.submitButtonText}>質問する</Text>
-            </Pressable>
+              inactive={!inputText.trim()}
+              text='質問する'
+              textStyle={styles.submitButtonText}
+            />
 
-            <Pressable style={styles.cancelButton} onPress={onCancel}>
-              <Text style={styles.cancelButtonText}>キャンセル</Text>
-            </Pressable>
+            <Button
+              style={styles.cancelButton}
+              onPress={onCancel}
+              text='キャンセル'
+              textStyle={styles.cancelButtonText}
+            />
           </ThemedView>
         </SafeAreaView>
       </ThemedView>

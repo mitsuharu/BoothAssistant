@@ -5,14 +5,13 @@ import * as Speech from 'expo-speech'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Alert,
-  Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   type TextStyle,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Button } from '@/components/Button'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { useAssistant } from '@/hooks/useAssistant'
@@ -68,26 +67,27 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
 
         {currentAnswer && !isLoading && (
           <ThemedView style={styles.speechContainer}>
-            <Pressable
+            <Button
               style={[
                 styles.speechButton,
                 isSpeaking && styles.speechButtonActive,
               ]}
               onPress={onSpeech}
-            >
-              <Text style={styles.speechButtonText}>
-                {isSpeaking ? '🔊 停止' : '🔊 音声で聞く'}
-              </Text>
-            </Pressable>
+              text={isSpeaking ? '🔊 停止' : '🔊 音声で聞く'}
+              textStyle={styles.speechButtonText}
+            />
           </ThemedView>
         )}
       </ScrollView>
 
       <SafeAreaView>
         <ThemedView style={styles.buttonContainer}>
-          <Pressable style={styles.backButton} onPress={onGoBack}>
-            <Text style={styles.backButtonText}>メイン画面に戻る</Text>
-          </Pressable>
+          <Button
+            style={styles.backButton}
+            onPress={onGoBack}
+            text='メイン画面に戻る'
+            textStyle={styles.backButtonText}
+          />
         </ThemedView>
       </SafeAreaView>
     </ThemedView>
