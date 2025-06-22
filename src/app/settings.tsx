@@ -6,10 +6,13 @@ import {
   StyleSheet,
   Text,
   type TextStyle,
+  useColorScheme,
   View,
   type ViewStyle,
 } from 'react-native'
+import { makeStyles } from 'react-native-swag-styles'
 import { Button } from '@/components/Button'
+import { COLOR } from '@/constants/Colors'
 import { clearAllHistory } from '@/utils/storage'
 import { styleType } from '@/utils/styles'
 
@@ -24,6 +27,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = ({
   isDeleting,
   onClearAllHistory,
 }) => {
+  const styles = useStyles()
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -32,7 +36,6 @@ const SettingsComponent: React.FC<SettingsComponentProps> = ({
 
           <Button
             style={[
-              styles.settingItem,
               styles.destructiveItem,
               isDeleting && styles.disabledItem,
             ]}
@@ -117,57 +120,68 @@ const SettingsContainer: React.FC<Props> = (props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: styleType<ViewStyle>({
-    flex: 1,
-  }),
-  scrollView: styleType<ViewStyle>({
-    flex: 1,
-    padding: 16,
-  }),
-  section: styleType<ViewStyle>({
-    marginBottom: 32,
-  }),
-  sectionTitle: styleType<TextStyle>({
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-    paddingHorizontal: 4,
-  }),
-  settingItem: styleType<ViewStyle>({
-    backgroundColor: '#f8f9fa',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#e9ecef',
-  }),
-  destructiveItem: styleType<ViewStyle>({
-    backgroundColor: '#fdf2f2',
-    borderColor: '#fecaca',
-  }),
-  disabledItem: styleType<ViewStyle>({
-    opacity: 0.5,
-  }),
-  settingItemContent: styleType<ViewStyle>({
-    flex: 1,
-    backgroundColor: 'transparent',
-  }),
-  settingItemTitle: styleType<TextStyle>({
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 4,
-  }),
-  settingItemDescription: styleType<TextStyle>({
-    fontSize: 14,
-    opacity: 0.7,
-  }),
-  destructiveText: styleType<TextStyle>({
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#dc2626',
-    marginBottom: 4,
-  }),
+const useStyles = makeStyles(useColorScheme, (colorScheme) => {
+  const styles = StyleSheet.create({
+    container: styleType<ViewStyle>({
+      flex: 1,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.SECONDARY,
+    }),
+    scrollView: styleType<ViewStyle>({
+      flex: 1,
+      padding: 16,
+    }),
+    section: styleType<ViewStyle>({
+      marginBottom: 32,
+    }),
+    sectionTitle: styleType<TextStyle>({
+      fontSize: 18,
+      fontWeight: '600',
+      marginBottom: 16,
+      paddingHorizontal: 4,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    settingItem: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).BACKGROUND.PRIMARY,
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: COLOR(colorScheme).BORDER.PRIMARY,
+    }),
+    destructiveItem: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).BACKGROUND.DESTRUCTIVE,
+      borderColor: COLOR(colorScheme).BORDER.DESTRUCTIVE,
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 8,
+      borderWidth: 1,
+    }),
+    disabledItem: styleType<ViewStyle>({
+      opacity: 0.5,
+    }),
+    settingItemContent: styleType<ViewStyle>({
+      flex: 1,
+      backgroundColor: 'transparent',
+    }),
+    settingItemTitle: styleType<TextStyle>({
+      fontSize: 16,
+      fontWeight: '500',
+      marginBottom: 4,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    settingItemDescription: styleType<TextStyle>({
+      fontSize: 14,
+      opacity: 0.7,
+      color: COLOR(colorScheme).TEXT.SECONDARY,
+    }),
+    destructiveText: styleType<TextStyle>({
+      fontSize: 16,
+      fontWeight: '500',
+      color: COLOR(colorScheme).FUNCTIONAL.ERROR,
+      marginBottom: 4,
+    }),
+  })
+  return styles
 })
 
 export default SettingsContainer

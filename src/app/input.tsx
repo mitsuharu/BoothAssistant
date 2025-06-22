@@ -9,11 +9,14 @@ import {
   Text,
   TextInput,
   type TextStyle,
+  useColorScheme,
   View,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { makeStyles } from 'react-native-swag-styles'
 import { Button } from '@/components/Button'
+import { COLOR } from '@/constants/Colors'
 import { styleType } from '@/utils/styles'
 
 type InputComponentProps = {
@@ -31,6 +34,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
   onQuestionSubmit,
   onCancel,
 }) => {
+  const styles = useStyles()
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -48,7 +52,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
               value={inputText}
               onChangeText={onInputTextChange}
               placeholder='ここに質問を入力してください...'
-              placeholderTextColor='#999'
+              placeholderTextColor={COLOR(useColorScheme()).TEXT.SECONDARY}
               multiline
               numberOfLines={8}
               textAlignVertical='top'
@@ -133,80 +137,86 @@ const InputContainer: React.FC<Props> = (props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: styleType<ViewStyle>({
-    flex: 1,
-  }),
-  content: styleType<ViewStyle>({
-    flex: 1,
-    padding: 16,
-  }),
-  scrollView: styleType<ViewStyle>({
-    flex: 1,
-  }),
-  header: styleType<ViewStyle>({
-    marginBottom: 24,
-  }),
-  subtitle: styleType<TextStyle>({
-    fontSize: 16,
-    opacity: 0.7,
-    marginTop: 8,
-  }),
-  inputContainer: styleType<ViewStyle>({
-    marginBottom: 16,
-  }),
-  textInput: styleType<TextStyle>({
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    fontSize: 16,
-    minHeight: 200,
-    backgroundColor: '#fafafa',
-  }),
-  helpContainer: styleType<ViewStyle>({
-    padding: 16,
-    backgroundColor: '#f0f8ff',
-    borderRadius: 8,
-    marginBottom: 16,
-  }),
-  helpText: styleType<TextStyle>({
-    fontSize: 14,
-    color: '#0066cc',
-  }),
-  buttonContainer: styleType<ViewStyle>({
-    paddingTop: 16,
-    gap: 12,
-  }),
-  submitButton: styleType<ViewStyle>({
-    backgroundColor: '#007AFF',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-  }),
-  submitButtonDisabled: styleType<ViewStyle>({
-    backgroundColor: '#ccc',
-  }),
-  submitButtonText: styleType<TextStyle>({
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  }),
-  cancelButton: styleType<ViewStyle>({
-    backgroundColor: 'transparent',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#007AFF',
-  }),
-  cancelButtonText: styleType<TextStyle>({
-    color: '#007AFF',
-    fontSize: 16,
-    fontWeight: '600',
-  }),
+const useStyles = makeStyles(useColorScheme, (colorScheme) => {
+  const styles = StyleSheet.create({
+    container: styleType<ViewStyle>({
+      flex: 1,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.SECONDARY,
+    }),
+    content: styleType<ViewStyle>({
+      flex: 1,
+      padding: 16,
+    }),
+    scrollView: styleType<ViewStyle>({
+      flex: 1,
+    }),
+    header: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    subtitle: styleType<TextStyle>({
+      fontSize: 16,
+      color: COLOR(colorScheme).TEXT.SECONDARY,
+      opacity: 0.7,
+      marginTop: 8,
+    }),
+    inputContainer: styleType<ViewStyle>({
+      marginBottom: 16,
+    }),
+    textInput: styleType<TextStyle>({
+      borderWidth: 1,
+      borderColor: COLOR(colorScheme).BORDER.PRIMARY,
+      borderRadius: 8,
+      padding: 16,
+      fontSize: 16,
+      minHeight: 200,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.PRIMARY,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    helpContainer: styleType<ViewStyle>({
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.HELP,
+      borderRadius: 8,
+      marginBottom: 16,
+    }),
+    helpText: styleType<TextStyle>({
+      fontSize: 14,
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+    }),
+    buttonContainer: styleType<ViewStyle>({
+      paddingTop: 16,
+      gap: 12,
+    }),
+    submitButton: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+    }),
+    submitButtonDisabled: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).FUNCTIONAL.DISABLED,
+    }),
+    submitButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+    cancelButton: styleType<ViewStyle>({
+      backgroundColor: 'transparent',
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+    }),
+    cancelButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+  })
+  return styles
 })
 
 export default InputContainer

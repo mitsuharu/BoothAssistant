@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons'
 import { Stack, useRouter } from 'expo-router'
 import { useMemo } from 'react'
-import { Pressable, View } from 'react-native'
+import { Pressable, useColorScheme, View } from 'react-native'
+import { COLOR } from '@/constants/Colors'
 
 export default function RootLayout() {
   const router = useRouter()
+  const colorScheme = useColorScheme()
 
   const settingButton = useMemo(
     () => (
@@ -15,7 +17,11 @@ export default function RootLayout() {
             paddingHorizontal: 8,
           }}
         >
-          <Ionicons name='settings' size={18} color='#007AFF' />
+          <Ionicons
+            name='settings'
+            size={18}
+            color={COLOR(colorScheme).BACKGROUND.EMPHASIZE}
+          />
         </Pressable>
       </View>
     ),
@@ -23,7 +29,17 @@ export default function RootLayout() {
   )
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: COLOR(colorScheme).BACKGROUND.PRIMARY,
+        },
+        headerTintColor: COLOR(colorScheme).TEXT.PRIMARY,
+        headerTitleStyle: {
+          color: COLOR(colorScheme).TEXT.PRIMARY,
+        },
+      }}
+    >
       <Stack.Screen
         name='index'
         options={{

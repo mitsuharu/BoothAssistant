@@ -9,11 +9,14 @@ import {
   StyleSheet,
   Text,
   type TextStyle,
+  useColorScheme,
   View,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { makeStyles } from 'react-native-swag-styles'
 import { Button } from '@/components/Button'
+import { COLOR } from '@/constants/Colors'
 import { useAssistant } from '@/hooks/useAssistant'
 import type { HistoryItem } from '@/types/history'
 import { addHistoryItem } from '@/utils/storage'
@@ -38,6 +41,8 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
   onSpeech,
   onGoBack,
 }) => {
+  const styles = useStyles()
+  const colorScheme = useColorScheme()
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -66,7 +71,11 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
             <Button
               style={[
                 styles.speechButton,
-                isSpeaking && styles.speechButtonActive,
+                {
+                  backgroundColor: isSpeaking
+                    ? COLOR(colorScheme).FUNCTIONAL.WARNING
+                    : COLOR(colorScheme).FUNCTIONAL.SUCCESS,
+                },
               ]}
               onPress={onSpeech}
               text={isSpeaking ? '🔊 停止' : '🔊 音声で聞く'}
@@ -191,97 +200,101 @@ const ResultContainer: React.FC<Props> = (props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: styleType<ViewStyle>({
-    flex: 1,
-    padding: 16,
-  }),
-  scrollView: styleType<ViewStyle>({
-    flex: 1,
-  }),
-  header: styleType<ViewStyle>({
-    marginBottom: 24,
-  }),
-  questionContainer: styleType<ViewStyle>({
-    marginBottom: 24,
-  }),
-  answerContainer: styleType<ViewStyle>({
-    marginBottom: 24,
-  }),
-  sectionTitle: styleType<TextStyle>({
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
-  }),
-  questionBox: styleType<ViewStyle>({
-    padding: 16,
-    backgroundColor: '#f0f8ff',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#007AFF',
-  }),
-  questionText: styleType<TextStyle>({
-    fontSize: 16,
-    lineHeight: 24,
-  }),
-  answerBox: styleType<ViewStyle>({
-    padding: 16,
-    backgroundColor: '#f8fff0',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#4CAF50',
-    minHeight: 100,
-  }),
-  answerText: styleType<TextStyle>({
-    fontSize: 16,
-    lineHeight: 24,
-  }),
-  loadingText: styleType<TextStyle>({
-    fontSize: 16,
-    fontStyle: 'italic',
-    opacity: 0.7,
-  }),
-  errorText: styleType<TextStyle>({
-    fontSize: 16,
-    color: '#FF3B30',
-  }),
-  speechContainer: styleType<ViewStyle>({
-    alignItems: 'center',
-    marginBottom: 24,
-  }),
-  speechButton: styleType<ViewStyle>({
-    backgroundColor: '#4CAF50',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    minWidth: 150,
-  }),
-  speechButtonActive: styleType<ViewStyle>({
-    backgroundColor: '#FF9500',
-  }),
-  speechButtonText: styleType<TextStyle>({
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  }),
-  buttonContainer: styleType<ViewStyle>({
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  }),
-  backButton: styleType<ViewStyle>({
-    backgroundColor: '#007AFF',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-  }),
-  backButtonText: styleType<TextStyle>({
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  }),
+const useStyles = makeStyles(useColorScheme, (colorScheme) => {
+  const styles = StyleSheet.create({
+    container: styleType<ViewStyle>({
+      flex: 1,
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.SECONDARY,
+    }),
+    scrollView: styleType<ViewStyle>({
+      flex: 1,
+    }),
+    header: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    questionContainer: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    answerContainer: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    sectionTitle: styleType<TextStyle>({
+      fontSize: 18,
+      fontWeight: '600',
+      marginBottom: 12,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    questionBox: styleType<ViewStyle>({
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.QUESTION,
+      borderRadius: 8,
+      borderLeftWidth: 4,
+      borderLeftColor: COLOR(colorScheme).BORDER.QUESTION,
+    }),
+    questionText: styleType<TextStyle>({
+      fontSize: 16,
+      lineHeight: 24,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    answerBox: styleType<ViewStyle>({
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.ANSWER,
+      borderRadius: 8,
+      borderLeftWidth: 4,
+      borderLeftColor: COLOR(colorScheme).BORDER.ANSWER,
+      minHeight: 100,
+    }),
+    answerText: styleType<TextStyle>({
+      fontSize: 16,
+      lineHeight: 24,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    loadingText: styleType<TextStyle>({
+      fontSize: 16,
+      fontStyle: 'italic',
+      opacity: 0.7,
+      color: COLOR(colorScheme).TEXT.SECONDARY,
+    }),
+    errorText: styleType<TextStyle>({
+      fontSize: 16,
+      color: COLOR(colorScheme).FUNCTIONAL.ERROR,
+    }),
+    speechContainer: styleType<ViewStyle>({
+      alignItems: 'center',
+      marginBottom: 24,
+    }),
+    speechButton: styleType<ViewStyle>({
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+      minWidth: 150,
+    }),
+    speechButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+    buttonContainer: styleType<ViewStyle>({
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: COLOR(colorScheme).BORDER.PRIMARY,
+    }),
+    backButton: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+    }),
+    backButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+  })
+  return styles
 })
 
 export default ResultContainer
