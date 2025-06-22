@@ -1,9 +1,17 @@
 import { useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { Alert, Pressable, ScrollView, StyleSheet } from 'react-native'
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  type TextStyle,
+  type ViewStyle,
+} from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { clearAllHistory } from '@/utils/storage'
+import { styleType } from '@/utils/styles'
 
 type SettingsComponentProps = {
   isDeleting: boolean
@@ -112,56 +120,56 @@ const SettingsContainer: React.FC<Props> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: styleType<ViewStyle>({
     flex: 1,
-  },
-  scrollView: {
+  }),
+  scrollView: styleType<ViewStyle>({
     flex: 1,
     padding: 16,
-  },
-  section: {
+  }),
+  section: styleType<ViewStyle>({
     marginBottom: 32,
-  },
-  sectionTitle: {
+  }),
+  sectionTitle: styleType<TextStyle>({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 16,
     paddingHorizontal: 4,
-  },
-  settingItem: {
+  }),
+  settingItem: styleType<ViewStyle>({
     backgroundColor: '#f8f9fa',
     borderRadius: 12,
     padding: 16,
     marginBottom: 8,
     borderWidth: 1,
     borderColor: '#e9ecef',
-  },
-  destructiveItem: {
+  }),
+  destructiveItem: styleType<ViewStyle>({
     backgroundColor: '#fdf2f2',
     borderColor: '#fecaca',
-  },
-  disabledItem: {
+  }),
+  disabledItem: styleType<ViewStyle>({
     opacity: 0.5,
-  },
-  settingItemContent: {
+  }),
+  settingItemContent: styleType<ViewStyle>({
     flex: 1,
     backgroundColor: 'transparent',
-  },
-  settingItemTitle: {
+  }),
+  settingItemTitle: styleType<TextStyle>({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 4,
-  },
-  settingItemDescription: {
+  }),
+  settingItemDescription: styleType<TextStyle>({
     fontSize: 14,
     opacity: 0.7,
-  },
-  destructiveText: {
+  }),
+  destructiveText: styleType<TextStyle>({
     fontSize: 16,
     fontWeight: '500',
     color: '#dc2626',
     marginBottom: 4,
-  },
+  }),
 })
 
 export default SettingsContainer

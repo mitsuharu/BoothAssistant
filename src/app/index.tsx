@@ -2,12 +2,21 @@ import { Ionicons } from '@expo/vector-icons'
 import { FlashList } from '@shopify/flash-list'
 import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import type { HistoryItem } from '@/types/history'
 import { loadHistory, removeHistoryItem } from '@/utils/storage'
+import { styleType } from '@/utils/styles'
 
 type MainComponentProps = {
   history: HistoryItem[]
@@ -176,30 +185,30 @@ const MainContainer: React.FC<Props> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: styleType<ViewStyle>({
     flex: 1,
     padding: 16,
-  },
-  header: {
+  }),
+  header: styleType<ViewStyle>({
     marginBottom: 16,
-  },
-  historyContainer: {
+  }),
+  historyContainer: styleType<ViewStyle>({
     flex: 1,
     marginBottom: 16,
-  },
-  emptyContainer: {
+  }),
+  emptyContainer: styleType<ViewStyle>({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  emptyText: {
+  }),
+  emptyText: styleType<TextStyle>({
     fontSize: 16,
     opacity: 0.6,
-  },
-  itemContainer: {
+  }),
+  itemContainer: styleType<ViewStyle>({
     marginBottom: 8,
-  },
-  historyItem: {
+  }),
+  historyItem: styleType<ViewStyle>({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
@@ -207,42 +216,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     borderWidth: 1,
     borderColor: '#e0e0e0',
-  },
-  itemContent: {
+  }),
+  itemContent: styleType<ViewStyle>({
     flex: 1,
-  },
-  questionText: {
+  }),
+  questionText: styleType<TextStyle>({
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 4,
-  },
-  timestampText: {
+  }),
+  timestampText: styleType<TextStyle>({
     fontSize: 12,
     opacity: 0.6,
-  },
-  deleteButton: {
+  }),
+  deleteButton: styleType<ViewStyle>({
     padding: 8,
     marginLeft: 12,
     borderRadius: 6,
     backgroundColor: '#f8f9fa',
-  },
-  buttonContainer: {
+  }),
+  buttonContainer: styleType<ViewStyle>({
     paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-  },
-  inputButton: {
+  }),
+  inputButton: styleType<ViewStyle>({
     backgroundColor: '#007AFF',
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
-  },
-  inputButtonText: {
+  }),
+  inputButtonText: styleType<TextStyle>({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
-  },
+  }),
 })
 
 export default MainContainer

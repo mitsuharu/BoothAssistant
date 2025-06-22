@@ -3,13 +3,22 @@ import type { StackNavigationProp } from '@react-navigation/stack'
 import { useLocalSearchParams } from 'expo-router'
 import * as Speech from 'expo-speech'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  type TextStyle,
+  type ViewStyle,
+} from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { useAssistant } from '@/hooks/useAssistant'
 import type { HistoryItem } from '@/types/history'
 import { addHistoryItem } from '@/utils/storage'
+import { styleType } from '@/utils/styles'
 
 type ResultComponentProps = {
   question: string
@@ -187,96 +196,96 @@ const ResultContainer: React.FC<Props> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: styleType<ViewStyle>({
     flex: 1,
     padding: 16,
-  },
-  scrollView: {
+  }),
+  scrollView: styleType<ViewStyle>({
     flex: 1,
-  },
-  header: {
+  }),
+  header: styleType<ViewStyle>({
     marginBottom: 24,
-  },
-  questionContainer: {
+  }),
+  questionContainer: styleType<ViewStyle>({
     marginBottom: 24,
-  },
-  answerContainer: {
+  }),
+  answerContainer: styleType<ViewStyle>({
     marginBottom: 24,
-  },
-  sectionTitle: {
+  }),
+  sectionTitle: styleType<TextStyle>({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
-  },
-  questionBox: {
+  }),
+  questionBox: styleType<ViewStyle>({
     padding: 16,
     backgroundColor: '#f0f8ff',
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: '#007AFF',
-  },
-  questionText: {
+  }),
+  questionText: styleType<TextStyle>({
     fontSize: 16,
     lineHeight: 24,
-  },
-  answerBox: {
+  }),
+  answerBox: styleType<ViewStyle>({
     padding: 16,
     backgroundColor: '#f8fff0',
     borderRadius: 8,
     borderLeftWidth: 4,
     borderLeftColor: '#4CAF50',
     minHeight: 100,
-  },
-  answerText: {
+  }),
+  answerText: styleType<TextStyle>({
     fontSize: 16,
     lineHeight: 24,
-  },
-  loadingText: {
+  }),
+  loadingText: styleType<TextStyle>({
     fontSize: 16,
     fontStyle: 'italic',
     opacity: 0.7,
-  },
-  errorText: {
+  }),
+  errorText: styleType<TextStyle>({
     fontSize: 16,
     color: '#FF3B30',
-  },
-  speechContainer: {
+  }),
+  speechContainer: styleType<ViewStyle>({
     alignItems: 'center',
     marginBottom: 24,
-  },
-  speechButton: {
+  }),
+  speechButton: styleType<ViewStyle>({
     backgroundColor: '#4CAF50',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
     minWidth: 150,
-  },
-  speechButtonActive: {
+  }),
+  speechButtonActive: styleType<ViewStyle>({
     backgroundColor: '#FF9500',
-  },
-  speechButtonText: {
+  }),
+  speechButtonText: styleType<TextStyle>({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
-  },
-  buttonContainer: {
+  }),
+  buttonContainer: styleType<ViewStyle>({
     paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-  },
-  backButton: {
+  }),
+  backButton: styleType<ViewStyle>({
     backgroundColor: '#007AFF',
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
-  },
-  backButtonText: {
+  }),
+  backButtonText: styleType<TextStyle>({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
-  },
+  }),
 })
 
 export default ResultContainer

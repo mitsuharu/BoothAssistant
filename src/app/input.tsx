@@ -9,10 +9,13 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  type TextStyle,
+  type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
+import { styleType } from '@/utils/styles'
 
 type InputComponentProps = {
   inputText: string
@@ -131,28 +134,28 @@ const InputContainer: React.FC<Props> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: styleType<ViewStyle>({
     flex: 1,
-  },
-  content: {
+  }),
+  content: styleType<ViewStyle>({
     flex: 1,
     padding: 16,
-  },
-  scrollView: {
+  }),
+  scrollView: styleType<ViewStyle>({
     flex: 1,
-  },
-  header: {
+  }),
+  header: styleType<ViewStyle>({
     marginBottom: 24,
-  },
-  subtitle: {
+  }),
+  subtitle: styleType<TextStyle>({
     fontSize: 16,
     opacity: 0.7,
     marginTop: 8,
-  },
-  inputContainer: {
+  }),
+  inputContainer: styleType<ViewStyle>({
     marginBottom: 16,
-  },
-  textInput: {
+  }),
+  textInput: styleType<TextStyle>({
     borderWidth: 1,
     borderColor: '#e0e0e0',
     borderRadius: 8,
@@ -160,37 +163,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     minHeight: 200,
     backgroundColor: '#fafafa',
-  },
-  helpContainer: {
+  }),
+  helpContainer: styleType<ViewStyle>({
     padding: 16,
     backgroundColor: '#f0f8ff',
     borderRadius: 8,
     marginBottom: 16,
-  },
-  helpText: {
+  }),
+  helpText: styleType<TextStyle>({
     fontSize: 14,
     color: '#0066cc',
-  },
-  buttonContainer: {
+  }),
+  buttonContainer: styleType<ViewStyle>({
     paddingTop: 16,
     gap: 12,
-  },
-  submitButton: {
+  }),
+  submitButton: styleType<ViewStyle>({
     backgroundColor: '#007AFF',
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
-  },
-  submitButtonDisabled: {
+  }),
+  submitButtonDisabled: styleType<ViewStyle>({
     backgroundColor: '#ccc',
-  },
-  submitButtonText: {
+  }),
+  submitButtonText: styleType<TextStyle>({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
-  },
-  cancelButton: {
+  }),
+  cancelButton: styleType<ViewStyle>({
     backgroundColor: 'transparent',
     paddingVertical: 16,
     paddingHorizontal: 24,
@@ -198,12 +201,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#007AFF',
-  },
-  cancelButtonText: {
+  }),
+  cancelButtonText: styleType<TextStyle>({
     color: '#007AFF',
     fontSize: 16,
     fontWeight: '600',
-  },
+  }),
 })
 
 export default InputContainer
