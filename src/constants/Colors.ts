@@ -1,26 +1,47 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+import type { ColorSchemeName } from 'react-native'
 
-const tintColorLight = '#0a7ea4'
-const tintColorDark = '#fff'
+type ColorType = {
+  CLEAR: string
+  TEXT: {
+    PRIMARY: string
+    SECONDARY: string
+    EMPHASIZE: string
+  }
+  BACKGROUND: {
+    PRIMARY: string
+    SECONDARY: string
+    EMPHASIZE: string
+  }
+}
 
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+const defaultColor: ColorType = {
+  CLEAR: 'rgba(0,0,0,0)',
+  TEXT: {
+    PRIMARY: 'black',
+    SECONDARY: '#4F5A6B',
+    EMPHASIZE: '#ffffff',
   },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+  BACKGROUND: {
+    PRIMARY: '#FFFFFF',
+    SECONDARY: '#F2F2F2',
+    EMPHASIZE: '#007AFF',
   },
+}
+
+const darkColor: ColorType = {
+  ...defaultColor,
+  TEXT: {
+    PRIMARY: 'white',
+    SECONDARY: '#E2E8F1',
+    EMPHASIZE: '#050505',
+  },
+  BACKGROUND: {
+    PRIMARY: '#171F2A',
+    SECONDARY: '#11161D',
+    EMPHASIZE: '#007AFF',
+  },
+}
+
+export const COLOR = (colorScheme: ColorSchemeName = 'light') => {
+  return colorScheme === 'dark' ? darkColor : defaultColor
 }

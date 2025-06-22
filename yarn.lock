@@ -2754,6 +2754,7 @@ __metadata:
     react-native-reanimated: "npm:~3.17.4"
     react-native-safe-area-context: "npm:5.4.0"
     react-native-screens: "npm:~4.11.1"
+    react-native-swag-styles: "npm:^0.2.2"
     react-native-web: "npm:~0.20.0"
     react-native-webview: "npm:13.13.5"
     typescript: "npm:~5.8.3"
@@ -3811,6 +3812,13 @@ __metadata:
   version: 2.1.0
   resolution: "fast-json-stable-stringify@npm:2.1.0"
   checksum: 10c0/7f081eb0b8a64e0057b3bb03f974b3ef00135fbf36c1c710895cd9300f13c94ba809bb3a81cf4e1b03f6e5285610a61abbd7602d0652de423144dfee5a389c9b
+  languageName: node
+  linkType: hard
+
+"fast-memoize@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "fast-memoize@npm:2.5.2"
+  checksum: 10c0/6f658f182f6eaf25a8ecdaf49affee4cac20df4e61e7ef3f04145fb86e887e7a0bd9975740ce88a9015da99459d7386eaf1342ac15be820f72f4be1ecf934d95
   languageName: node
   linkType: hard
 
@@ -6040,6 +6048,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/88a33ba419bd571cc318e80d25eb172f5829677f2dd80dcb69cbeaa6a35ba26214e0e82af87baa375182afe41a276e8ef1a9d13b826f662f3a389982492c2879
+  languageName: node
+  linkType: hard
+
+"react-native-swag-styles@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "react-native-swag-styles@npm:0.2.2"
+  dependencies:
+    fast-memoize: "npm:^2.5.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/6bd78cd3e1488a96558542d28b1181ebe06dde92fddd11217241d95cf6c2d9bee53eebc0acebfa61c20ee066c0f945e8c6af756da40eec6fa56e861e283d178a
   languageName: node
   linkType: hard
 

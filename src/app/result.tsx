@@ -7,13 +7,13 @@ import {
   Alert,
   ScrollView,
   StyleSheet,
+  Text,
   type TextStyle,
+  View,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from '@/components/Button'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
 import { useAssistant } from '@/hooks/useAssistant'
 import type { HistoryItem } from '@/types/history'
 import { addHistoryItem } from '@/utils/storage'
@@ -39,34 +39,30 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
   onGoBack,
 }) => {
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <ThemedView style={styles.questionContainer}>
-          <ThemedText style={styles.sectionTitle}>質問</ThemedText>
-          <ThemedView style={styles.questionBox}>
-            <ThemedText style={styles.questionText}>{question}</ThemedText>
-          </ThemedView>
-        </ThemedView>
+        <View style={styles.questionContainer}>
+          <Text style={styles.sectionTitle}>質問</Text>
+          <View style={styles.questionBox}>
+            <Text style={styles.questionText}>{question}</Text>
+          </View>
+        </View>
 
-        <ThemedView style={styles.answerContainer}>
-          <ThemedText style={styles.sectionTitle}>回答</ThemedText>
-          <ThemedView style={styles.answerBox}>
+        <View style={styles.answerContainer}>
+          <Text style={styles.sectionTitle}>回答</Text>
+          <View style={styles.answerBox}>
             {isLoading ? (
-              <ThemedText style={styles.loadingText}>
-                回答を生成中...
-              </ThemedText>
+              <Text style={styles.loadingText}>回答を生成中...</Text>
             ) : currentAnswer ? (
-              <ThemedText style={styles.answerText}>{currentAnswer}</ThemedText>
+              <Text style={styles.answerText}>{currentAnswer}</Text>
             ) : (
-              <ThemedText style={styles.errorText}>
-                回答の取得に失敗しました
-              </ThemedText>
+              <Text style={styles.errorText}>回答の取得に失敗しました</Text>
             )}
-          </ThemedView>
-        </ThemedView>
+          </View>
+        </View>
 
         {currentAnswer && !isLoading && (
-          <ThemedView style={styles.speechContainer}>
+          <View style={styles.speechContainer}>
             <Button
               style={[
                 styles.speechButton,
@@ -76,21 +72,21 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
               text={isSpeaking ? '🔊 停止' : '🔊 音声で聞く'}
               textStyle={styles.speechButtonText}
             />
-          </ThemedView>
+          </View>
         )}
       </ScrollView>
 
       <SafeAreaView>
-        <ThemedView style={styles.buttonContainer}>
+        <View style={styles.buttonContainer}>
           <Button
             style={styles.backButton}
             onPress={onGoBack}
             text='メイン画面に戻る'
             textStyle={styles.backButtonText}
           />
-        </ThemedView>
+        </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   )
 }
 

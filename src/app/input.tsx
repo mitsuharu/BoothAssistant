@@ -6,14 +6,14 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  Text,
   TextInput,
   type TextStyle,
+  View,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from '@/components/Button'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
 import { styleType } from '@/utils/styles'
 
 type InputComponentProps = {
@@ -36,15 +36,13 @@ const InputComponent: React.FC<InputComponentProps> = ({
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ThemedView style={styles.content}>
+      <View style={styles.content}>
         <ScrollView style={styles.scrollView}>
-          <ThemedView style={styles.header}>
-            <ThemedText style={styles.subtitle}>
-              知りたいことを入力してください
-            </ThemedText>
-          </ThemedView>
+          <View style={styles.header}>
+            <Text style={styles.subtitle}>知りたいことを入力してください</Text>
+          </View>
 
-          <ThemedView style={styles.inputContainer}>
+          <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
               value={inputText}
@@ -55,18 +53,18 @@ const InputComponent: React.FC<InputComponentProps> = ({
               numberOfLines={8}
               textAlignVertical='top'
             />
-          </ThemedView>
+          </View>
 
-          <ThemedView style={styles.helpContainer}>
-            <ThemedText style={styles.helpText}>
+          <View style={styles.helpContainer}>
+            <Text style={styles.helpText}>
               💡
               音声入力を使用するには、キーボードの音声入力ボタンを利用してください
-            </ThemedText>
-          </ThemedView>
+            </Text>
+          </View>
         </ScrollView>
 
         <SafeAreaView>
-          <ThemedView style={styles.buttonContainer}>
+          <View style={styles.buttonContainer}>
             <Button
               style={[
                 styles.submitButton,
@@ -84,9 +82,9 @@ const InputComponent: React.FC<InputComponentProps> = ({
               text='キャンセル'
               textStyle={styles.cancelButtonText}
             />
-          </ThemedView>
+          </View>
         </SafeAreaView>
-      </ThemedView>
+      </View>
     </KeyboardAvoidingView>
   )
 }

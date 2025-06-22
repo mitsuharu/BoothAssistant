@@ -4,12 +4,12 @@ import {
   Alert,
   ScrollView,
   StyleSheet,
+  Text,
   type TextStyle,
+  View,
   type ViewStyle,
 } from 'react-native'
 import { Button } from '@/components/Button'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
 import { clearAllHistory } from '@/utils/storage'
 import { styleType } from '@/utils/styles'
 
@@ -25,10 +25,10 @@ const SettingsComponent: React.FC<SettingsComponentProps> = ({
   onClearAllHistory,
 }) => {
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>データ管理</ThemedText>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>データ管理</Text>
 
           <Button
             style={[
@@ -39,33 +39,31 @@ const SettingsComponent: React.FC<SettingsComponentProps> = ({
             onPress={onClearAllHistory}
             inactive={isDeleting}
           >
-            <ThemedView style={styles.settingItemContent}>
-              <ThemedText style={styles.destructiveText}>
+            <View style={styles.settingItemContent}>
+              <Text style={styles.destructiveText}>
                 {isDeleting ? '削除中...' : 'すべての履歴を削除'}
-              </ThemedText>
-              <ThemedText style={styles.settingItemDescription}>
+              </Text>
+              <Text style={styles.settingItemDescription}>
                 保存されているすべての質問と回答を削除します
-              </ThemedText>
-            </ThemedView>
+              </Text>
+            </View>
           </Button>
-        </ThemedView>
+        </View>
 
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>アプリについて</ThemedText>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>アプリについて</Text>
 
-          <ThemedView style={styles.settingItem}>
-            <ThemedView style={styles.settingItemContent}>
-              <ThemedText style={styles.settingItemTitle}>
-                BoothAssistant
-              </ThemedText>
-              <ThemedText style={styles.settingItemDescription}>
+          <View style={styles.settingItem}>
+            <View style={styles.settingItemContent}>
+              <Text style={styles.settingItemTitle}>BoothAssistant</Text>
+              <Text style={styles.settingItemDescription}>
                 バージョン 1.0.0
-              </ThemedText>
-            </ThemedView>
-          </ThemedView>
-        </ThemedView>
+              </Text>
+            </View>
+          </View>
+        </View>
       </ScrollView>
-    </ThemedView>
+    </View>
   )
 }
 

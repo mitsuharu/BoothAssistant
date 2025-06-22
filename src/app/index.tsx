@@ -5,14 +5,16 @@ import { useCallback, useEffect, useState } from 'react'
 import {
   Alert,
   StyleSheet,
+  Text,
   type TextStyle,
+  useColorScheme,
   View,
   type ViewStyle,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { makeStyles } from 'react-native-swag-styles'
 import { Button } from '@/components/Button'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
+import { COLOR } from '@/constants/Colors'
 import type { HistoryItem } from '@/types/history'
 import { loadHistory, removeHistoryItem } from '@/utils/storage'
 import { styleType } from '@/utils/styles'
@@ -34,6 +36,8 @@ const MainComponent: React.FC<MainComponentProps> = ({
   onInputPress,
   onDeleteItem,
 }) => {
+  const styles = useStyles()
+
   const renderHistoryItem = useCallback(
     ({ item }: { item: HistoryItem }) => (
       <View style={styles.itemContainer}>
@@ -43,12 +47,12 @@ const MainComponent: React.FC<MainComponentProps> = ({
           onLongPress={() => onDeleteItem(item)}
         >
           <View style={styles.itemContent}>
-            <ThemedText style={styles.questionText} numberOfLines={2}>
+            <Text style={styles.questionText} numberOfLines={2}>
               {item.question}
-            </ThemedText>
-            <ThemedText style={styles.timestampText}>
+            </Text>
+            <Text style={styles.timestampText}>
               {new Date(item.timestamp).toLocaleString('ja-JP')}
-            </ThemedText>
+            </Text>
           </View>
           <Button
             style={styles.deleteButton}
@@ -59,26 +63,24 @@ const MainComponent: React.FC<MainComponentProps> = ({
         </Button>
       </View>
     ),
-    [onHistoryItemPress, onDeleteItem],
+    [onHistoryItemPress, onDeleteItem, styles],
   )
 
   if (isLoading) {
     return (
-      <ThemedView style={styles.container}>
-        <ThemedText>読み込み中...</ThemedText>
-      </ThemedView>
+      <View style={styles.container}>
+        <Text>読み込み中...</Text>
+      </View>
     )
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={styles.historyContainer}>
+    <View style={styles.container}>
+      <View style={styles.historyContainer}>
         {history.length === 0 ? (
-          <ThemedView style={styles.emptyContainer}>
-            <ThemedText style={styles.emptyText}>
-              まだ質問履歴がありません
-            </ThemedText>
-          </ThemedView>
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>まだ質問履歴がありません</Text>
+          </View>
         ) : (
           <FlashList
             data={history}
@@ -88,19 +90,19 @@ const MainComponent: React.FC<MainComponentProps> = ({
             showsVerticalScrollIndicator={false}
           />
         )}
-      </ThemedView>
+      </View>
 
       <SafeAreaView>
-        <ThemedView style={styles.buttonContainer}>
+        <View style={styles.buttonContainer}>
           <Button
             style={styles.inputButton}
             onPress={onInputPress}
             text='新しい質問をする'
             textStyle={styles.inputButtonText}
           />
-        </ThemedView>
+        </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   )
 }
 
@@ -186,74 +188,80 @@ const MainContainer: React.FC<Props> = (props) => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: styleType<ViewStyle>({
-    flex: 1,
-    padding: 16,
-  }),
-  header: styleType<ViewStyle>({
-    marginBottom: 16,
-  }),
-  historyContainer: styleType<ViewStyle>({
-    flex: 1,
-    marginBottom: 16,
-  }),
-  emptyContainer: styleType<ViewStyle>({
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
-  emptyText: styleType<TextStyle>({
-    fontSize: 16,
-    opacity: 0.6,
-  }),
-  itemContainer: styleType<ViewStyle>({
-    marginBottom: 8,
-  }),
-  historyItem: styleType<ViewStyle>({
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 8,
-    backgroundColor: '#f5f5f5',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  }),
-  itemContent: styleType<ViewStyle>({
-    flex: 1,
-  }),
-  questionText: styleType<TextStyle>({
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 4,
-  }),
-  timestampText: styleType<TextStyle>({
-    fontSize: 12,
-    opacity: 0.6,
-  }),
-  deleteButton: styleType<ViewStyle>({
-    padding: 8,
-    marginLeft: 12,
-    borderRadius: 6,
-    backgroundColor: 'transparent',
-  }),
-  buttonContainer: styleType<ViewStyle>({
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  }),
-  inputButton: styleType<ViewStyle>({
-    backgroundColor: '#007AFF',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-  }),
-  inputButtonText: styleType<TextStyle>({
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  }),
+const useStyles = makeStyles(useColorScheme, (colorScheme) => {
+  const styles = StyleSheet.create({
+    container: styleType<ViewStyle>({
+      flex: 1,
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.SECONDARY,
+    }),
+    header: styleType<ViewStyle>({
+      marginBottom: 16,
+    }),
+    historyContainer: styleType<ViewStyle>({
+      flex: 1,
+      marginBottom: 16,
+    }),
+    emptyContainer: styleType<ViewStyle>({
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }),
+    emptyText: styleType<TextStyle>({
+      fontSize: 16,
+      opacity: 0.6,
+    }),
+    itemContainer: styleType<ViewStyle>({
+      marginBottom: 8,
+    }),
+    historyItem: styleType<ViewStyle>({
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 16,
+      borderRadius: 8,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.PRIMARY,
+      borderWidth: 1,
+      borderColor: COLOR(colorScheme).TEXT.SECONDARY,
+    }),
+    itemContent: styleType<ViewStyle>({
+      flex: 1,
+    }),
+    questionText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+      fontSize: 16,
+      fontWeight: '500',
+      marginBottom: 4,
+    }),
+    timestampText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.SECONDARY,
+      fontSize: 12,
+      opacity: 0.6,
+    }),
+    deleteButton: styleType<ViewStyle>({
+      padding: 8,
+      marginLeft: 12,
+      borderRadius: 6,
+      backgroundColor: 'transparent',
+    }),
+    buttonContainer: styleType<ViewStyle>({
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: '#e0e0e0',
+    }),
+    inputButton: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+    }),
+    inputButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+  })
+  return styles
 })
 
 export default MainContainer
