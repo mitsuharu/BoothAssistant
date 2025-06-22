@@ -1,11 +1,10 @@
-import {
-  type NavigationContainerRef,
-  useNavigation,
-} from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
+import type { StackNavigationProp } from '@react-navigation/stack'
 import { useLocalSearchParams } from 'expo-router'
 import * as Speech from 'expo-speech'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { useAssistant } from '@/hooks/useAssistant'
@@ -34,10 +33,6 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
   return (
     <ThemedView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <ThemedView style={styles.header}>
-          <ThemedText type='title'>回答結果</ThemedText>
-        </ThemedView>
-
         <ThemedView style={styles.questionContainer}>
           <ThemedText style={styles.sectionTitle}>質問</ThemedText>
           <ThemedView style={styles.questionBox}>
@@ -79,18 +74,19 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
         )}
       </ScrollView>
 
-      <ThemedView style={styles.buttonContainer}>
-        <Pressable style={styles.backButton} onPress={onGoBack}>
-          <Text style={styles.backButtonText}>メイン画面に戻る</Text>
-        </Pressable>
-      </ThemedView>
+      <SafeAreaView>
+        <ThemedView style={styles.buttonContainer}>
+          <Pressable style={styles.backButton} onPress={onGoBack}>
+            <Text style={styles.backButtonText}>メイン画面に戻る</Text>
+          </Pressable>
+        </ThemedView>
+      </SafeAreaView>
     </ThemedView>
   )
 }
 
 const ResultContainer: React.FC<Props> = (props) => {
-  const navigation =
-    useNavigation<NavigationContainerRef<{ index: undefined }>>()
+  const navigation = useNavigation<StackNavigationProp<{ index: undefined }>>()
 
   const { question, answer, isNew } = useLocalSearchParams<{
     question: string
@@ -132,7 +128,9 @@ const ResultContainer: React.FC<Props> = (props) => {
   }, [isNewQuestion, answer, fetchAnswer, question])
 
   const onSpeech = useCallback(async () => {
-    if (!currentAnswer) return
+    if (!currentAnswer) {
+      return
+    }
 
     if (isSpeaking) {
       Speech.stop()
@@ -169,12 +167,8 @@ const ResultContainer: React.FC<Props> = (props) => {
         console.error('Failed to save history')
       }
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'index' }],
-    })
 
-    // router.replace('/')
+    navigation.popToTop()
   }, [isSpeaking, isNewQuestion, currentAnswer, question, navigation])
 
   return (

@@ -10,6 +10,7 @@ import {
   Text,
   TextInput,
 } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 
@@ -36,7 +37,6 @@ const InputComponent: React.FC<InputComponentProps> = ({
       <ThemedView style={styles.content}>
         <ScrollView style={styles.scrollView}>
           <ThemedView style={styles.header}>
-            <ThemedText type='title'>質問を入力</ThemedText>
             <ThemedText style={styles.subtitle}>
               知りたいことを入力してください
             </ThemedText>
@@ -63,22 +63,24 @@ const InputComponent: React.FC<InputComponentProps> = ({
           </ThemedView>
         </ScrollView>
 
-        <ThemedView style={styles.buttonContainer}>
-          <Pressable
-            style={[
-              styles.submitButton,
-              !inputText.trim() && styles.submitButtonDisabled,
-            ]}
-            onPress={onQuestionSubmit}
-            disabled={!inputText.trim()}
-          >
-            <Text style={styles.submitButtonText}>質問する</Text>
-          </Pressable>
+        <SafeAreaView>
+          <ThemedView style={styles.buttonContainer}>
+            <Pressable
+              style={[
+                styles.submitButton,
+                !inputText.trim() && styles.submitButtonDisabled,
+              ]}
+              onPress={onQuestionSubmit}
+              disabled={!inputText.trim()}
+            >
+              <Text style={styles.submitButtonText}>質問する</Text>
+            </Pressable>
 
-          <Pressable style={styles.cancelButton} onPress={onCancel}>
-            <Text style={styles.cancelButtonText}>キャンセル</Text>
-          </Pressable>
-        </ThemedView>
+            <Pressable style={styles.cancelButton} onPress={onCancel}>
+              <Text style={styles.cancelButtonText}>キャンセル</Text>
+            </Pressable>
+          </ThemedView>
+        </SafeAreaView>
       </ThemedView>
     </KeyboardAvoidingView>
   )

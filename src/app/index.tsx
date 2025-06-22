@@ -3,7 +3,7 @@ import { FlashList } from '@shopify/flash-list'
 import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
-
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import type { HistoryItem } from '@/types/history'
@@ -64,10 +64,6 @@ const MainComponent: React.FC<MainComponentProps> = ({
 
   return (
     <ThemedView style={styles.container}>
-      <ThemedView style={styles.header}>
-        <ThemedText type='title'>質問履歴</ThemedText>
-      </ThemedView>
-
       <ThemedView style={styles.historyContainer}>
         {history.length === 0 ? (
           <ThemedView style={styles.emptyContainer}>
@@ -86,11 +82,13 @@ const MainComponent: React.FC<MainComponentProps> = ({
         )}
       </ThemedView>
 
-      <ThemedView style={styles.buttonContainer}>
-        <Pressable style={styles.inputButton} onPress={onInputPress}>
-          <Text style={styles.inputButtonText}>新しい質問をする</Text>
-        </Pressable>
-      </ThemedView>
+      <SafeAreaView>
+        <ThemedView style={styles.buttonContainer}>
+          <Pressable style={styles.inputButton} onPress={onInputPress}>
+            <Text style={styles.inputButtonText}>新しい質問をする</Text>
+          </Pressable>
+        </ThemedView>
+      </SafeAreaView>
     </ThemedView>
   )
 }
@@ -118,7 +116,7 @@ const MainContainer: React.FC<Props> = (props) => {
   useFocusEffect(
     useCallback(() => {
       loadHistoryData()
-    }, [loadHistoryData])
+    }, [loadHistoryData]),
   )
 
   const onHistoryItemPress = useCallback(
