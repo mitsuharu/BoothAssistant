@@ -1,4 +1,8 @@
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import {
+  type NavigationContainerRef,
+  useNavigation,
+} from '@react-navigation/native'
+import { useLocalSearchParams } from 'expo-router'
 import * as Speech from 'expo-speech'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
@@ -8,89 +12,25 @@ import { useAssistant } from '@/hooks/useAssistant'
 import type { HistoryItem } from '@/types/history'
 import { addHistoryItem } from '@/utils/storage'
 
-export default function ResultScreen() {
-  const router = useRouter()
-  const { question, answer, isNew } = useLocalSearchParams<{
-    question: string
-    answer?: string
-    timestamp?: string
-    isNew?: string
-  }>()
-  const { response, status, fetchResponse } = useAssistant()
+type ResultComponentProps = {
+  question: string
+  currentAnswer: string
+  isLoading: boolean
+  isSpeaking: boolean
+  onSpeech: () => void
+  onGoBack: () => void
+}
 
-  const [isSpeaking, setIsSpeaking] = useState(false)
-  const [currentAnswer, setCurrentAnswer] = useState('')
+type Props = ResultComponentProps & {}
 
-  const isNewQuestion = useMemo(() => isNew === 'true', [isNew])
-  const isLoading = useMemo(() => status === 'loading', [status])
-
-  const fetchAnswer = useCallback(
-    async (question: string) => {
-      try {
-        await fetchResponse(question)
-      } catch (error: any) {
-        console.warn(error)
-      }
-    },
-    [fetchResponse],
-  )
-
-  useEffect(() => {
-    if (status === 'success' && !!response) {
-      setCurrentAnswer(response)
-    }
-  }, [response, status])
-
-  useEffect(() => {
-    if (isNewQuestion) {
-      fetchAnswer(question)
-    } else if (answer) {
-      setCurrentAnswer(answer)
-    }
-  }, [isNewQuestion, answer, fetchAnswer, question])
-
-  const handleSpeech = useCallback(async () => {
-    if (!currentAnswer) return
-
-    if (isSpeaking) {
-      Speech.stop()
-      setIsSpeaking(false)
-    } else {
-      setIsSpeaking(true)
-      Speech.speak(currentAnswer, {
-        language: 'ja-JP',
-        onDone: () => setIsSpeaking(false),
-        onError: () => {
-          setIsSpeaking(false)
-          Alert.alert('エラー', '音声再生に失敗しました')
-        },
-      })
-    }
-  }, [currentAnswer, isSpeaking])
-
-  const handleGoBack = useCallback(async () => {
-    if (isSpeaking) {
-      Speech.stop()
-    }
-
-    if (isNewQuestion && currentAnswer && question) {
-      const historyItem: HistoryItem = {
-        id: Date.now().toString(),
-        question,
-        answer: currentAnswer,
-        timestamp: Date.now(),
-      }
-
-      try {
-        await addHistoryItem(historyItem)
-      } catch (error) {
-        console.error('Failed to save history:', error)
-      }
-    }
-
-    router.replace('/')
-  }, [isSpeaking, isNewQuestion, currentAnswer, question, router])
-
+const ResultComponent: React.FC<ResultComponentProps> = ({
+  question,
+  currentAnswer,
+  isLoading,
+  isSpeaking,
+  onSpeech,
+  onGoBack,
+}) => {
   return (
     <ThemedView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -129,7 +69,7 @@ export default function ResultScreen() {
                 styles.speechButton,
                 isSpeaking && styles.speechButtonActive,
               ]}
-              onPress={handleSpeech}
+              onPress={onSpeech}
             >
               <Text style={styles.speechButtonText}>
                 {isSpeaking ? '🔊 停止' : '🔊 音声で聞く'}
@@ -140,11 +80,115 @@ export default function ResultScreen() {
       </ScrollView>
 
       <ThemedView style={styles.buttonContainer}>
-        <Pressable style={styles.backButton} onPress={handleGoBack}>
+        <Pressable style={styles.backButton} onPress={onGoBack}>
           <Text style={styles.backButtonText}>メイン画面に戻る</Text>
         </Pressable>
       </ThemedView>
     </ThemedView>
+  )
+}
+
+const ResultContainer: React.FC<Props> = (props) => {
+  const navigation =
+    useNavigation<NavigationContainerRef<{ index: undefined }>>()
+
+  const { question, answer, isNew } = useLocalSearchParams<{
+    question: string
+    answer?: string
+    timestamp?: string
+    isNew?: string
+  }>()
+  const { response, status, fetchResponse } = useAssistant()
+
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  const [currentAnswer, setCurrentAnswer] = useState('')
+
+  const isNewQuestion = useMemo(() => isNew === 'true', [isNew])
+  const isLoading = useMemo(() => status === 'loading', [status])
+
+  const fetchAnswer = useCallback(
+    (question: string) => {
+      try {
+        fetchResponse(question)
+      } catch {
+        console.warn('Failed to fetch response')
+      }
+    },
+    [fetchResponse],
+  )
+
+  useEffect(() => {
+    if (status === 'success' && !!response) {
+      setCurrentAnswer(response)
+    }
+  }, [response, status])
+
+  useEffect(() => {
+    if (isNewQuestion) {
+      fetchAnswer(question)
+    } else if (answer) {
+      setCurrentAnswer(answer)
+    }
+  }, [isNewQuestion, answer, fetchAnswer, question])
+
+  const onSpeech = useCallback(async () => {
+    if (!currentAnswer) return
+
+    if (isSpeaking) {
+      Speech.stop()
+      setIsSpeaking(false)
+    } else {
+      setIsSpeaking(true)
+      Speech.speak(currentAnswer, {
+        language: 'ja-JP',
+        onDone: () => setIsSpeaking(false),
+        onError: () => {
+          setIsSpeaking(false)
+          Alert.alert('エラー', '音声再生に失敗しました')
+        },
+      })
+    }
+  }, [currentAnswer, isSpeaking])
+
+  const onGoBack = useCallback(async () => {
+    if (isSpeaking) {
+      Speech.stop()
+    }
+
+    if (isNewQuestion && currentAnswer && question) {
+      const historyItem: HistoryItem = {
+        id: Date.now().toString(),
+        question,
+        answer: currentAnswer,
+        timestamp: Date.now(),
+      }
+
+      try {
+        await addHistoryItem(historyItem)
+      } catch {
+        console.error('Failed to save history')
+      }
+    }
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'index' }],
+    })
+
+    // router.replace('/')
+  }, [isSpeaking, isNewQuestion, currentAnswer, question, navigation])
+
+  return (
+    <ResultComponent
+      {...props}
+      {...{
+        question,
+        currentAnswer,
+        isLoading,
+        isSpeaking,
+        onSpeech,
+        onGoBack,
+      }}
+    />
   )
 }
 
@@ -240,3 +284,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 })
+
+export default ResultContainer

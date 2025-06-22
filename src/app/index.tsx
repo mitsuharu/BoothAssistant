@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { FlashList } from '@shopify/flash-list'
-import { useRouter } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native'
 
@@ -9,75 +9,30 @@ import { ThemedView } from '@/components/ThemedView'
 import type { HistoryItem } from '@/types/history'
 import { loadHistory, removeHistoryItem } from '@/utils/storage'
 
-export default function MainScreen() {
-  const router = useRouter()
-  const [history, setHistory] = useState<HistoryItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+type MainComponentProps = {
+  history: HistoryItem[]
+  isLoading: boolean
+  onHistoryItemPress: (item: HistoryItem) => void
+  onInputPress: () => void
+  onDeleteItem: (item: HistoryItem) => void
+}
 
-  const loadHistoryData = useCallback(async () => {
-    try {
-      const historyData = await loadHistory()
-      setHistory(historyData)
-    } catch {
-      Alert.alert('エラー', '履歴の読み込みに失敗しました')
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+type Props = MainComponentProps & {}
 
-  useEffect(() => {
-    loadHistoryData()
-  }, [loadHistoryData])
-
-  const handleHistoryItemPress = useCallback(
-    (item: HistoryItem) => {
-      router.push({
-        pathname: '/result',
-        params: {
-          question: item.question,
-          answer: item.answer,
-          timestamp: item.timestamp.toString(),
-        },
-      })
-    },
-    [router],
-  )
-
-  const handleInputPress = useCallback(() => {
-    router.push('/input')
-  }, [router])
-
-  const handleDeleteItem = useCallback(
-    async (item: HistoryItem) => {
-      Alert.alert('確認', 'この質問履歴を削除しますか？', [
-        {
-          text: 'キャンセル',
-          style: 'cancel',
-        },
-        {
-          text: '削除',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await removeHistoryItem(item.id)
-              await loadHistoryData()
-            } catch {
-              Alert.alert('エラー', '履歴の削除に失敗しました')
-            }
-          },
-        },
-      ])
-    },
-    [loadHistoryData],
-  )
-
+const MainComponent: React.FC<MainComponentProps> = ({
+  history,
+  isLoading,
+  onHistoryItemPress,
+  onInputPress,
+  onDeleteItem,
+}) => {
   const renderHistoryItem = useCallback(
     ({ item }: { item: HistoryItem }) => (
       <View style={styles.itemContainer}>
         <Pressable
           style={styles.historyItem}
-          onPress={() => handleHistoryItemPress(item)}
-          onLongPress={() => handleDeleteItem(item)}
+          onPress={() => onHistoryItemPress(item)}
+          onLongPress={() => onDeleteItem(item)}
         >
           <View style={styles.itemContent}>
             <ThemedText style={styles.questionText} numberOfLines={2}>
@@ -89,14 +44,14 @@ export default function MainScreen() {
           </View>
           <Pressable
             style={styles.deleteButton}
-            onPress={() => handleDeleteItem(item)}
+            onPress={() => onDeleteItem(item)}
           >
             <Ionicons name='trash' size={20} color='#FF3B30' />
           </Pressable>
         </Pressable>
       </View>
     ),
-    [handleHistoryItemPress, handleDeleteItem],
+    [onHistoryItemPress, onDeleteItem],
   )
 
   if (isLoading) {
@@ -132,11 +87,93 @@ export default function MainScreen() {
       </ThemedView>
 
       <ThemedView style={styles.buttonContainer}>
-        <Pressable style={styles.inputButton} onPress={handleInputPress}>
+        <Pressable style={styles.inputButton} onPress={onInputPress}>
           <Text style={styles.inputButtonText}>新しい質問をする</Text>
         </Pressable>
       </ThemedView>
     </ThemedView>
+  )
+}
+
+const MainContainer: React.FC<Props> = (props) => {
+  const router = useRouter()
+  const [history, setHistory] = useState<HistoryItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  const loadHistoryData = useCallback(async () => {
+    try {
+      const historyData = await loadHistory()
+      setHistory(historyData)
+    } catch {
+      Alert.alert('エラー', '履歴の読み込みに失敗しました')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadHistoryData()
+  }, [loadHistoryData])
+
+  useFocusEffect(
+    useCallback(() => {
+      loadHistoryData()
+    }, [loadHistoryData])
+  )
+
+  const onHistoryItemPress = useCallback(
+    (item: HistoryItem) => {
+      router.push({
+        pathname: '/result',
+        params: {
+          question: item.question,
+          answer: item.answer,
+          timestamp: item.timestamp.toString(),
+        },
+      })
+    },
+    [router],
+  )
+
+  const onInputPress = useCallback(() => {
+    router.push('/input')
+  }, [router])
+
+  const onDeleteItem = useCallback(
+    async (item: HistoryItem) => {
+      Alert.alert('確認', 'この質問履歴を削除しますか？', [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '削除',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await removeHistoryItem(item.id)
+              await loadHistoryData()
+            } catch {
+              Alert.alert('エラー', '履歴の削除に失敗しました')
+            }
+          },
+        },
+      ])
+    },
+    [loadHistoryData],
+  )
+
+  return (
+    <MainComponent
+      {...props}
+      {...{
+        history,
+        isLoading,
+        onHistoryItemPress,
+        onInputPress,
+        onDeleteItem,
+      }}
+    />
   )
 }
 
@@ -209,3 +246,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 })
+
+export default MainContainer

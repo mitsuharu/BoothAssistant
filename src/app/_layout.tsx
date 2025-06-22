@@ -11,6 +11,7 @@ export default function RootLayout() {
         name='index'
         options={{
           title: '質問履歴',
+          headerBackVisible: false,
           headerRight: () => (
             <Pressable
               onPress={() => router.push('/settings')}
@@ -25,7 +26,6 @@ export default function RootLayout() {
         name='input'
         options={{
           title: '質問入力',
-          presentation: 'modal',
         }}
       />
       <Stack.Screen

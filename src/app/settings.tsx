@@ -1,40 +1,21 @@
+import { useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
 import { Alert, Pressable, ScrollView, StyleSheet } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { clearAllHistory } from '@/utils/storage'
 
-export default function SettingsScreen() {
-  const [isDeleting, setIsDeleting] = useState(false)
+type SettingsComponentProps = {
+  isDeleting: boolean
+  onClearAllHistory: () => void
+}
 
-  const handleClearAllHistory = useCallback(async () => {
-    Alert.alert(
-      '確認',
-      'すべての質問履歴を削除しますか？この操作は取り消せません。',
-      [
-        {
-          text: 'キャンセル',
-          style: 'cancel',
-        },
-        {
-          text: '削除',
-          style: 'destructive',
-          onPress: async () => {
-            setIsDeleting(true)
-            try {
-              await clearAllHistory()
-              Alert.alert('完了', 'すべての履歴を削除しました')
-            } catch {
-              Alert.alert('エラー', '履歴の削除に失敗しました')
-            } finally {
-              setIsDeleting(false)
-            }
-          },
-        },
-      ],
-    )
-  }, [])
+type Props = SettingsComponentProps & {}
 
+const SettingsComponent: React.FC<SettingsComponentProps> = ({
+  isDeleting,
+  onClearAllHistory,
+}) => {
   return (
     <ThemedView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -47,7 +28,7 @@ export default function SettingsScreen() {
               styles.destructiveItem,
               isDeleting && styles.disabledItem,
             ]}
-            onPress={handleClearAllHistory}
+            onPress={onClearAllHistory}
             disabled={isDeleting}
           >
             <ThemedView style={styles.settingItemContent}>
@@ -77,6 +58,56 @@ export default function SettingsScreen() {
         </ThemedView>
       </ScrollView>
     </ThemedView>
+  )
+}
+
+const SettingsContainer: React.FC<Props> = (props) => {
+  const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const onClearAllHistory = useCallback(async () => {
+    Alert.alert(
+      '確認',
+      'すべての質問履歴を削除しますか？この操作は取り消せません。',
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '削除',
+          style: 'destructive',
+          onPress: async () => {
+            setIsDeleting(true)
+            try {
+              await clearAllHistory()
+              Alert.alert('完了', 'すべての履歴を削除しました', [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    router.back()
+                  },
+                },
+              ])
+            } catch {
+              Alert.alert('エラー', '履歴の削除に失敗しました')
+            } finally {
+              setIsDeleting(false)
+            }
+          },
+        },
+      ],
+    )
+  }, [router])
+
+  return (
+    <SettingsComponent
+      {...props}
+      {...{
+        isDeleting,
+        onClearAllHistory,
+      }}
+    />
   )
 }
 
@@ -131,3 +162,5 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 })
+
+export default SettingsContainer

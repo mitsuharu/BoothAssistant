@@ -13,29 +13,21 @@ import {
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 
-export default function InputScreen() {
-  const router = useRouter()
-  const [inputText, setInputText] = useState('')
+type InputComponentProps = {
+  inputText: string
+  onInputTextChange: (text: string) => void
+  onQuestionSubmit: () => void
+  onCancel: () => void
+}
 
-  const handleQuestionSubmit = useCallback(async () => {
-    if (!inputText.trim()) {
-      Alert.alert('エラー', '質問を入力してください')
-      return
-    }
+type Props = InputComponentProps & {}
 
-    try {
-      router.push({
-        pathname: '/result',
-        params: {
-          question: inputText.trim(),
-          isNew: 'true',
-        },
-      })
-    } catch {
-      Alert.alert('エラー', '質問の処理に失敗しました')
-    }
-  }, [inputText, router])
-
+const InputComponent: React.FC<InputComponentProps> = ({
+  inputText,
+  onInputTextChange,
+  onQuestionSubmit,
+  onCancel,
+}) => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -54,7 +46,7 @@ export default function InputScreen() {
             <TextInput
               style={styles.textInput}
               value={inputText}
-              onChangeText={setInputText}
+              onChangeText={onInputTextChange}
               placeholder='ここに質問を入力してください...'
               placeholderTextColor='#999'
               multiline
@@ -77,18 +69,62 @@ export default function InputScreen() {
               styles.submitButton,
               !inputText.trim() && styles.submitButtonDisabled,
             ]}
-            onPress={handleQuestionSubmit}
+            onPress={onQuestionSubmit}
             disabled={!inputText.trim()}
           >
-            <Text style={styles.submitButtonText}>{'質問する'}</Text>
+            <Text style={styles.submitButtonText}>質問する</Text>
           </Pressable>
 
-          <Pressable style={styles.cancelButton} onPress={() => router.back()}>
+          <Pressable style={styles.cancelButton} onPress={onCancel}>
             <Text style={styles.cancelButtonText}>キャンセル</Text>
           </Pressable>
         </ThemedView>
       </ThemedView>
     </KeyboardAvoidingView>
+  )
+}
+
+const InputContainer: React.FC<Props> = (props) => {
+  const router = useRouter()
+  const [inputText, setInputText] = useState('')
+
+  const onInputTextChange = useCallback((text: string) => {
+    setInputText(text)
+  }, [])
+
+  const onQuestionSubmit = useCallback(async () => {
+    if (!inputText.trim()) {
+      Alert.alert('エラー', '質問を入力してください')
+      return
+    }
+
+    try {
+      router.push({
+        pathname: '/result',
+        params: {
+          question: inputText.trim(),
+          isNew: 'true',
+        },
+      })
+    } catch {
+      Alert.alert('エラー', '質問の処理に失敗しました')
+    }
+  }, [inputText, router])
+
+  const onCancel = useCallback(() => {
+    router.back()
+  }, [router])
+
+  return (
+    <InputComponent
+      {...props}
+      {...{
+        inputText,
+        onInputTextChange,
+        onQuestionSubmit,
+        onCancel,
+      }}
+    />
   )
 }
 
@@ -167,3 +203,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 })
+
+export default InputContainer
