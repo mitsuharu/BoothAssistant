@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   },
   settingItemContent: {
     flex: 1,
+    backgroundColor: 'transparent',
   },
   settingItemTitle: {
     fontSize: 16,
