@@ -155,7 +155,7 @@ const useStyles = makeStyles(useColorScheme, (colorScheme) => {
     }),
     subtitle: styleType<TextStyle>({
       fontSize: 16,
-      color: COLOR(colorScheme).TEXT.SECONDARY,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
       opacity: 0.7,
       marginTop: 8,
     }),
@@ -180,7 +180,7 @@ const useStyles = makeStyles(useColorScheme, (colorScheme) => {
     }),
     helpText: styleType<TextStyle>({
       fontSize: 14,
-      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
     }),
     buttonContainer: styleType<ViewStyle>({
       paddingTop: 16,

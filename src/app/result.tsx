@@ -16,6 +16,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { makeStyles } from 'react-native-swag-styles'
 import { Button } from '@/components/Button'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { COLOR } from '@/constants/Colors'
 import { useAssistant } from '@/hooks/useAssistant'
 import type { HistoryItem } from '@/types/history'
@@ -44,60 +45,63 @@ const ResultComponent: React.FC<ResultComponentProps> = ({
   const styles = useStyles()
   const colorScheme = useColorScheme()
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.questionContainer}>
-          <Text style={styles.sectionTitle}>質問</Text>
-          <View style={styles.questionBox}>
-            <Text style={styles.questionText}>{question}</Text>
+    <>
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.questionContainer}>
+            <Text style={styles.sectionTitle}>質問</Text>
+            <View style={styles.questionBox}>
+              <Text style={styles.questionText}>{question}</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.answerContainer}>
-          <View style={styles.answerHeader}>
-            <Text style={styles.sectionTitle}>回答</Text>
-            {currentAnswer && !isLoading && (
-              <Button
-                style={[
-                  styles.speechButton,
-                  {
-                    backgroundColor: isSpeaking
-                      ? COLOR(colorScheme).FUNCTIONAL.WARNING
-                      : COLOR(colorScheme).FUNCTIONAL.SUCCESS,
-                  },
-                ]}
-                onPress={onSpeech}
-                text={isSpeaking ? '🔊 停止' : '🔊 再生'}
-                textStyle={styles.speechButtonText}
-              />
-            )}
+          <View style={styles.answerContainer}>
+            <View style={styles.answerHeader}>
+              <Text style={styles.sectionTitle}>回答</Text>
+              {currentAnswer && !isLoading && (
+                <Button
+                  style={[
+                    styles.speechButton,
+                    {
+                      backgroundColor: isSpeaking
+                        ? COLOR(colorScheme).FUNCTIONAL.WARNING
+                        : COLOR(colorScheme).FUNCTIONAL.SUCCESS,
+                    },
+                  ]}
+                  onPress={onSpeech}
+                  text={isSpeaking ? '🔊 停止' : '🔊 再生'}
+                  textStyle={styles.speechButtonText}
+                />
+              )}
+            </View>
+            <View style={styles.answerBox}>
+              {isLoading ? (
+                <Text style={styles.loadingText}>回答を生成中...</Text>
+              ) : currentAnswer ? (
+                <Text style={styles.answerText}>{currentAnswer}</Text>
+              ) : (
+                <Text style={styles.errorText}>回答の取得に失敗しました</Text>
+              )}
+            </View>
           </View>
-          <View style={styles.answerBox}>
-            {isLoading ? (
-              <Text style={styles.loadingText}>回答を生成中...</Text>
-            ) : currentAnswer ? (
-              <Text style={styles.answerText}>{currentAnswer}</Text>
-            ) : (
-              <Text style={styles.errorText}>回答の取得に失敗しました</Text>
-            )}
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
 
-      <SafeAreaView>
-        <View style={styles.buttonContainer}>
-          <Button
-            style={styles.backButton}
-            onPress={onGoBack}
-            text='メイン画面に戻る'
-            textStyle={styles.backButtonText}
-          />
-        </View>
-      </SafeAreaView>
-    </View>
+        <SafeAreaView>
+          <View style={styles.buttonContainer}>
+            <Button
+              style={styles.backButton}
+              onPress={onGoBack}
+              text='メイン画面に戻る'
+              textStyle={styles.backButtonText}
+            />
+          </View>
+        </SafeAreaView>
+      </View>
+      <LoadingSpinner isLoading={isLoading} />
+    </>
   )
 }
 

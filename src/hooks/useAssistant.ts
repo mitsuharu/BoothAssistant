@@ -37,7 +37,6 @@ export const useAssistant = (): AssistantType => {
             },
           ],
         })
-        console.log('Response received:', result)
 
         setStatus('success')
         setResponse(result.output_text)
