@@ -30,3 +30,21 @@ export const addHistoryItem = async (item: HistoryItem): Promise<void> => {
     console.error('Failed to add history item:', error)
   }
 }
+
+export const removeHistoryItem = async (itemId: string): Promise<void> => {
+  try {
+    const currentHistory = await loadHistory()
+    const updatedHistory = currentHistory.filter((item) => item.id !== itemId)
+    await saveHistory(updatedHistory)
+  } catch (error) {
+    console.error('Failed to remove history item:', error)
+  }
+}
+
+export const clearAllHistory = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(HISTORY_KEY)
+  } catch (error) {
+    console.error('Failed to clear all history:', error)
+  }
+}

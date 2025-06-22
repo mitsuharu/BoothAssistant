@@ -1,15 +1,113 @@
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useNavigation } from '@react-navigation/native'
+import type { StackNavigationProp } from '@react-navigation/stack'
+import { useLocalSearchParams } from 'expo-router'
 import * as Speech from 'expo-speech'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  type TextStyle,
+  useColorScheme,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { makeStyles } from 'react-native-swag-styles'
+import { Button } from '@/components/Button'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { COLOR } from '@/constants/Colors'
 import { useAssistant } from '@/hooks/useAssistant'
 import type { HistoryItem } from '@/types/history'
 import { addHistoryItem } from '@/utils/storage'
+import { styleType } from '@/utils/styles'
 
-export default function ResultScreen() {
-  const router = useRouter()
+type ResultComponentProps = {
+  question: string
+  currentAnswer: string
+  isLoading: boolean
+  isSpeaking: boolean
+  onSpeech: () => void
+  onGoBack: () => void
+}
+
+type Props = ResultComponentProps & {}
+
+const ResultComponent: React.FC<ResultComponentProps> = ({
+  question,
+  currentAnswer,
+  isLoading,
+  isSpeaking,
+  onSpeech,
+  onGoBack,
+}) => {
+  const styles = useStyles()
+  const colorScheme = useColorScheme()
+  return (
+    <>
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.questionContainer}>
+            <Text style={styles.sectionTitle}>質問</Text>
+            <View style={styles.questionBox}>
+              <Text style={styles.questionText}>{question}</Text>
+            </View>
+          </View>
+
+          <View style={styles.answerContainer}>
+            <View style={styles.answerHeader}>
+              <Text style={styles.sectionTitle}>回答</Text>
+              {currentAnswer && !isLoading && (
+                <Button
+                  style={[
+                    styles.speechButton,
+                    {
+                      backgroundColor: isSpeaking
+                        ? COLOR(colorScheme).FUNCTIONAL.WARNING
+                        : COLOR(colorScheme).FUNCTIONAL.SUCCESS,
+                    },
+                  ]}
+                  onPress={onSpeech}
+                  text={isSpeaking ? '🔊 停止' : '🔊 再生'}
+                  textStyle={styles.speechButtonText}
+                />
+              )}
+            </View>
+            <View style={styles.answerBox}>
+              {isLoading ? (
+                <Text style={styles.loadingText}>回答を生成中...</Text>
+              ) : currentAnswer ? (
+                <Text style={styles.answerText}>{currentAnswer}</Text>
+              ) : (
+                <Text style={styles.errorText}>回答の取得に失敗しました</Text>
+              )}
+            </View>
+          </View>
+        </ScrollView>
+
+        <SafeAreaView>
+          <View style={styles.buttonContainer}>
+            <Button
+              style={styles.backButton}
+              onPress={onGoBack}
+              text='メイン画面に戻る'
+              textStyle={styles.backButtonText}
+            />
+          </View>
+        </SafeAreaView>
+      </View>
+      <LoadingSpinner isLoading={isLoading} />
+    </>
+  )
+}
+
+const ResultContainer: React.FC<Props> = (props) => {
+  const navigation = useNavigation<StackNavigationProp<{ index: undefined }>>()
+
   const { question, answer, isNew } = useLocalSearchParams<{
     question: string
     answer?: string
@@ -25,11 +123,11 @@ export default function ResultScreen() {
   const isLoading = useMemo(() => status === 'loading', [status])
 
   const fetchAnswer = useCallback(
-    async (question: string) => {
+    (question: string) => {
       try {
-        await fetchResponse(question)
-      } catch (error: any) {
-        console.warn(error)
+        fetchResponse(question)
+      } catch {
+        console.warn('Failed to fetch response')
       }
     },
     [fetchResponse],
@@ -49,8 +147,10 @@ export default function ResultScreen() {
     }
   }, [isNewQuestion, answer, fetchAnswer, question])
 
-  const handleSpeech = useCallback(async () => {
-    if (!currentAnswer) return
+  const onSpeech = useCallback(async () => {
+    if (!currentAnswer) {
+      return
+    }
 
     if (isSpeaking) {
       Speech.stop()
@@ -68,7 +168,7 @@ export default function ResultScreen() {
     }
   }, [currentAnswer, isSpeaking])
 
-  const handleGoBack = useCallback(async () => {
+  const onGoBack = useCallback(async () => {
     if (isSpeaking) {
       Speech.stop()
     }
@@ -83,160 +183,126 @@ export default function ResultScreen() {
 
       try {
         await addHistoryItem(historyItem)
-      } catch (error) {
-        console.error('Failed to save history:', error)
+      } catch {
+        console.error('Failed to save history')
       }
     }
 
-    router.replace('/')
-  }, [isSpeaking, isNewQuestion, currentAnswer, question, router])
+    navigation.popToTop()
+  }, [isSpeaking, isNewQuestion, currentAnswer, question, navigation])
 
   return (
-    <ThemedView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <ThemedView style={styles.header}>
-          <ThemedText type='title'>回答結果</ThemedText>
-        </ThemedView>
-
-        <ThemedView style={styles.questionContainer}>
-          <ThemedText style={styles.sectionTitle}>質問</ThemedText>
-          <ThemedView style={styles.questionBox}>
-            <ThemedText style={styles.questionText}>{question}</ThemedText>
-          </ThemedView>
-        </ThemedView>
-
-        <ThemedView style={styles.answerContainer}>
-          <ThemedText style={styles.sectionTitle}>回答</ThemedText>
-          <ThemedView style={styles.answerBox}>
-            {isLoading ? (
-              <ThemedText style={styles.loadingText}>
-                回答を生成中...
-              </ThemedText>
-            ) : currentAnswer ? (
-              <ThemedText style={styles.answerText}>{currentAnswer}</ThemedText>
-            ) : (
-              <ThemedText style={styles.errorText}>
-                回答の取得に失敗しました
-              </ThemedText>
-            )}
-          </ThemedView>
-        </ThemedView>
-
-        {currentAnswer && !isLoading && (
-          <ThemedView style={styles.speechContainer}>
-            <Pressable
-              style={[
-                styles.speechButton,
-                isSpeaking && styles.speechButtonActive,
-              ]}
-              onPress={handleSpeech}
-            >
-              <Text style={styles.speechButtonText}>
-                {isSpeaking ? '🔊 停止' : '🔊 音声で聞く'}
-              </Text>
-            </Pressable>
-          </ThemedView>
-        )}
-      </ScrollView>
-
-      <ThemedView style={styles.buttonContainer}>
-        <Pressable style={styles.backButton} onPress={handleGoBack}>
-          <Text style={styles.backButtonText}>メイン画面に戻る</Text>
-        </Pressable>
-      </ThemedView>
-    </ThemedView>
+    <ResultComponent
+      {...props}
+      {...{
+        question,
+        currentAnswer,
+        isLoading,
+        isSpeaking,
+        onSpeech,
+        onGoBack,
+      }}
+    />
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  header: {
-    marginBottom: 24,
-  },
-  questionContainer: {
-    marginBottom: 24,
-  },
-  answerContainer: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
-  },
-  questionBox: {
-    padding: 16,
-    backgroundColor: '#f0f8ff',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#007AFF',
-  },
-  questionText: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  answerBox: {
-    padding: 16,
-    backgroundColor: '#f8fff0',
-    borderRadius: 8,
-    borderLeftWidth: 4,
-    borderLeftColor: '#4CAF50',
-    minHeight: 100,
-  },
-  answerText: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  loadingText: {
-    fontSize: 16,
-    fontStyle: 'italic',
-    opacity: 0.7,
-  },
-  errorText: {
-    fontSize: 16,
-    color: '#FF3B30',
-  },
-  speechContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  speechButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    minWidth: 150,
-  },
-  speechButtonActive: {
-    backgroundColor: '#FF9500',
-  },
-  speechButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  buttonContainer: {
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  },
-  backButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  backButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+const useStyles = makeStyles(useColorScheme, (colorScheme) => {
+  const styles = StyleSheet.create({
+    container: styleType<ViewStyle>({
+      flex: 1,
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.SECONDARY,
+    }),
+    scrollView: styleType<ViewStyle>({
+      flex: 1,
+    }),
+    header: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    questionContainer: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    answerContainer: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    answerHeader: styleType<ViewStyle>({
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 12,
+    }),
+    sectionTitle: styleType<TextStyle>({
+      fontSize: 18,
+      fontWeight: '600',
+      marginBottom: 12,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    questionBox: styleType<ViewStyle>({
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.QUESTION,
+      borderRadius: 8,
+      borderLeftWidth: 4,
+      borderLeftColor: COLOR(colorScheme).BORDER.QUESTION,
+    }),
+    questionText: styleType<TextStyle>({
+      fontSize: 16,
+      lineHeight: 24,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    answerBox: styleType<ViewStyle>({
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.ANSWER,
+      borderRadius: 8,
+      borderLeftWidth: 4,
+      borderLeftColor: COLOR(colorScheme).BORDER.ANSWER,
+      minHeight: 100,
+    }),
+    answerText: styleType<TextStyle>({
+      fontSize: 16,
+      lineHeight: 24,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    loadingText: styleType<TextStyle>({
+      fontSize: 16,
+      fontStyle: 'italic',
+      opacity: 0.7,
+      color: COLOR(colorScheme).TEXT.SECONDARY,
+    }),
+    errorText: styleType<TextStyle>({
+      fontSize: 16,
+      color: COLOR(colorScheme).FUNCTIONAL.ERROR,
+    }),
+    speechButton: styleType<ViewStyle>({
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      borderRadius: 6,
+      alignItems: 'center',
+      minWidth: 40,
+    }),
+    speechButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      fontSize: 14,
+      fontWeight: '600',
+    }),
+    buttonContainer: styleType<ViewStyle>({
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: COLOR(colorScheme).BORDER.PRIMARY,
+    }),
+    backButton: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+    }),
+    backButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+  })
+  return styles
 })
+
+export default ResultContainer

@@ -4,20 +4,104 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  type TextStyle,
+  useColorScheme,
+  View,
+  type ViewStyle,
 } from 'react-native'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { makeStyles } from 'react-native-swag-styles'
+import { Button } from '@/components/Button'
+import { COLOR } from '@/constants/Colors'
+import { styleType } from '@/utils/styles'
 
-export default function InputScreen() {
+type InputComponentProps = {
+  inputText: string
+  onInputTextChange: (text: string) => void
+  onQuestionSubmit: () => void
+  onCancel: () => void
+}
+
+type Props = InputComponentProps & {}
+
+const InputComponent: React.FC<InputComponentProps> = ({
+  inputText,
+  onInputTextChange,
+  onQuestionSubmit,
+  onCancel,
+}) => {
+  const styles = useStyles()
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <View style={styles.content}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.header}>
+            <Text style={styles.subtitle}>知りたいことを入力してください</Text>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              value={inputText}
+              onChangeText={onInputTextChange}
+              placeholder='ここに質問を入力してください...'
+              placeholderTextColor={COLOR(useColorScheme()).TEXT.SECONDARY}
+              multiline
+              numberOfLines={8}
+              textAlignVertical='top'
+            />
+          </View>
+
+          <View style={styles.helpContainer}>
+            <Text style={styles.helpText}>
+              💡
+              音声入力を使用するには、キーボードの音声入力ボタンを利用してください
+            </Text>
+          </View>
+        </ScrollView>
+
+        <SafeAreaView>
+          <View style={styles.buttonContainer}>
+            <Button
+              style={[
+                styles.submitButton,
+                !inputText.trim() && styles.submitButtonDisabled,
+              ]}
+              onPress={onQuestionSubmit}
+              inactive={!inputText.trim()}
+              text='質問する'
+              textStyle={styles.submitButtonText}
+            />
+
+            <Button
+              style={styles.cancelButton}
+              onPress={onCancel}
+              text='キャンセル'
+              textStyle={styles.cancelButtonText}
+            />
+          </View>
+        </SafeAreaView>
+      </View>
+    </KeyboardAvoidingView>
+  )
+}
+
+const InputContainer: React.FC<Props> = (props) => {
   const router = useRouter()
   const [inputText, setInputText] = useState('')
 
-  const handleQuestionSubmit = useCallback(async () => {
+  const onInputTextChange = useCallback((text: string) => {
+    setInputText(text)
+  }, [])
+
+  const onQuestionSubmit = useCallback(async () => {
     if (!inputText.trim()) {
       Alert.alert('エラー', '質問を入力してください')
       return
@@ -36,134 +120,103 @@ export default function InputScreen() {
     }
   }, [inputText, router])
 
+  const onCancel = useCallback(() => {
+    router.back()
+  }, [router])
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ThemedView style={styles.content}>
-        <ScrollView style={styles.scrollView}>
-          <ThemedView style={styles.header}>
-            <ThemedText type='title'>質問を入力</ThemedText>
-            <ThemedText style={styles.subtitle}>
-              知りたいことを入力してください
-            </ThemedText>
-          </ThemedView>
-
-          <ThemedView style={styles.inputContainer}>
-            <TextInput
-              style={styles.textInput}
-              value={inputText}
-              onChangeText={setInputText}
-              placeholder='ここに質問を入力してください...'
-              placeholderTextColor='#999'
-              multiline
-              numberOfLines={8}
-              textAlignVertical='top'
-            />
-          </ThemedView>
-
-          <ThemedView style={styles.helpContainer}>
-            <ThemedText style={styles.helpText}>
-              💡
-              音声入力を使用するには、キーボードの音声入力ボタンを利用してください
-            </ThemedText>
-          </ThemedView>
-        </ScrollView>
-
-        <ThemedView style={styles.buttonContainer}>
-          <Pressable
-            style={[
-              styles.submitButton,
-              !inputText.trim() && styles.submitButtonDisabled,
-            ]}
-            onPress={handleQuestionSubmit}
-            disabled={!inputText.trim()}
-          >
-            <Text style={styles.submitButtonText}>{'質問する'}</Text>
-          </Pressable>
-
-          <Pressable style={styles.cancelButton} onPress={() => router.back()}>
-            <Text style={styles.cancelButtonText}>キャンセル</Text>
-          </Pressable>
-        </ThemedView>
-      </ThemedView>
-    </KeyboardAvoidingView>
+    <InputComponent
+      {...props}
+      {...{
+        inputText,
+        onInputTextChange,
+        onQuestionSubmit,
+        onCancel,
+      }}
+    />
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  header: {
-    marginBottom: 24,
-  },
-  subtitle: {
-    fontSize: 16,
-    opacity: 0.7,
-    marginTop: 8,
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    fontSize: 16,
-    minHeight: 200,
-    backgroundColor: '#fafafa',
-  },
-  helpContainer: {
-    padding: 16,
-    backgroundColor: '#f0f8ff',
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  helpText: {
-    fontSize: 14,
-    color: '#0066cc',
-  },
-  buttonContainer: {
-    paddingTop: 16,
-    gap: 12,
-  },
-  submitButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  submitButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  submitButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    backgroundColor: 'transparent',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#007AFF',
-  },
-  cancelButtonText: {
-    color: '#007AFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
+const useStyles = makeStyles(useColorScheme, (colorScheme) => {
+  const styles = StyleSheet.create({
+    container: styleType<ViewStyle>({
+      flex: 1,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.SECONDARY,
+    }),
+    content: styleType<ViewStyle>({
+      flex: 1,
+      padding: 16,
+    }),
+    scrollView: styleType<ViewStyle>({
+      flex: 1,
+    }),
+    header: styleType<ViewStyle>({
+      marginBottom: 24,
+    }),
+    subtitle: styleType<TextStyle>({
+      fontSize: 16,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+      opacity: 0.7,
+      marginTop: 8,
+    }),
+    inputContainer: styleType<ViewStyle>({
+      marginBottom: 16,
+    }),
+    textInput: styleType<TextStyle>({
+      borderWidth: 1,
+      borderColor: COLOR(colorScheme).BORDER.PRIMARY,
+      borderRadius: 8,
+      padding: 16,
+      fontSize: 16,
+      minHeight: 200,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.PRIMARY,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    helpContainer: styleType<ViewStyle>({
+      padding: 16,
+      backgroundColor: COLOR(colorScheme).BACKGROUND.HELP,
+      borderRadius: 8,
+      marginBottom: 16,
+    }),
+    helpText: styleType<TextStyle>({
+      fontSize: 14,
+      color: COLOR(colorScheme).TEXT.PRIMARY,
+    }),
+    buttonContainer: styleType<ViewStyle>({
+      paddingTop: 16,
+      gap: 12,
+    }),
+    submitButton: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+    }),
+    submitButtonDisabled: styleType<ViewStyle>({
+      backgroundColor: COLOR(colorScheme).FUNCTIONAL.DISABLED,
+    }),
+    submitButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).TEXT.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+    cancelButton: styleType<ViewStyle>({
+      backgroundColor: 'transparent',
+      paddingVertical: 16,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+    }),
+    cancelButtonText: styleType<TextStyle>({
+      color: COLOR(colorScheme).BACKGROUND.EMPHASIZE,
+      fontSize: 16,
+      fontWeight: '600',
+    }),
+  })
+  return styles
 })
+
+export default InputContainer
