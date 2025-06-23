@@ -3,6 +3,8 @@
 - OpenAI API + ゆめみオープンハンドブック MCP を利用したアプリ
 - カンファレンスのブースなどにおけるAIアシスタントを想定しています
 
+https://github.com/user-attachments/assets/0b63bb2c-c2ef-487a-b1a7-6c1be8e41bac
+
 ## Get started
 
 0. Add `.env.local` with your OpenAI API Key
