@@ -35,10 +35,7 @@ const SettingsComponent: React.FC<SettingsComponentProps> = ({
           <Text style={styles.sectionTitle}>データ管理</Text>
 
           <Button
-            style={[
-              styles.destructiveItem,
-              isDeleting && styles.disabledItem,
-            ]}
+            style={[styles.destructiveItem, isDeleting && styles.disabledItem]}
             onPress={onClearAllHistory}
             inactive={isDeleting}
           >

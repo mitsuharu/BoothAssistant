@@ -25,7 +25,7 @@ export default function RootLayout() {
         </Pressable>
       </View>
     ),
-    [router.push],
+    [router.push, colorScheme],
   )
 
   return (
