@@ -40,7 +40,7 @@ export const useAssistant = (): AssistantType => {
 
         setStatus('success')
         setResponse(result.output_text)
-      } catch (error: any) {
+      } catch (error) {
         // https://github.com/openai/openai-node?tab=readme-ov-file#handling-errors
         console.warn(error)
         setStatus('error')
