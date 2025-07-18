@@ -46,6 +46,7 @@
     "react-native-webview": "13.13.5"
   },
   "devDependencies": {
+    "@anthropic-ai/claude-code": "^1.0.55",
     "@babel/core": "^7.25.2",
     "@biomejs/biome": "^2.0.5",
     "@types/react": "~19.0.10",
