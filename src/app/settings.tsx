@@ -1,3 +1,4 @@
+import { Button, styleType } from '@mitsuharu/react-native-components-plus'
 import { useRouter } from 'expo-router'
 import { useCallback, useState } from 'react'
 import {
@@ -11,10 +12,8 @@ import {
   type ViewStyle,
 } from 'react-native'
 import { makeStyles } from 'react-native-swag-styles'
-import { Button } from '@/components/Button'
 import { COLOR } from '@/constants/Colors'
 import { clearAllHistory } from '@/utils/storage'
-import { styleType } from '@/utils/styles'
 
 type SettingsComponentProps = {
   isDeleting: boolean

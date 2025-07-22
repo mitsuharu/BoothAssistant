@@ -1,3 +1,8 @@
+import {
+  Button,
+  LoadingSpinner,
+  styleType,
+} from '@mitsuharu/react-native-components-plus'
 import { useNavigation } from '@react-navigation/native'
 import type { StackNavigationProp } from '@react-navigation/stack'
 import { useLocalSearchParams } from 'expo-router'
@@ -15,13 +20,10 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { makeStyles } from 'react-native-swag-styles'
-import { Button } from '@/components/Button'
-import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { COLOR } from '@/constants/Colors'
 import { useAssistant } from '@/hooks/useAssistant'
 import type { HistoryItem } from '@/types/history'
 import { addHistoryItem } from '@/utils/storage'
-import { styleType } from '@/utils/styles'
 
 type ResultComponentProps = {
   question: string

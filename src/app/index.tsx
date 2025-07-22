@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import { Button, styleType } from '@mitsuharu/react-native-components-plus'
 import { FlashList } from '@shopify/flash-list'
 import { useFocusEffect, useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
@@ -13,11 +14,9 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { makeStyles } from 'react-native-swag-styles'
-import { Button } from '@/components/Button'
 import { COLOR } from '@/constants/Colors'
 import type { HistoryItem } from '@/types/history'
 import { loadHistory, removeHistoryItem } from '@/utils/storage'
-import { styleType } from '@/utils/styles'
 
 type MainComponentProps = {
   history: HistoryItem[]

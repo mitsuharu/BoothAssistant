@@ -1,3 +1,4 @@
+import { styleType } from '@mitsuharu/react-native-components-plus'
 import { Link, Stack } from 'expo-router'
 import {
   StyleSheet,
@@ -6,7 +7,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import { styleType } from '@/utils/styles'
 
 export default function NotFoundScreen() {
   return (
