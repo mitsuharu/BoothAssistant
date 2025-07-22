@@ -1737,6 +1737,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mitsuharu/react-native-components-plus@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@mitsuharu/react-native-components-plus@npm:0.1.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/75cf0468f72fcd167dc6d119ebe683cb4c465d0018ad27ba2c4c2542fffdcbf623b5953a825192c386da14f3f1af92ca2192ebf09fc71132beba2f4aeca18559
+  languageName: node
+  linkType: hard
+
 "@npmcli/agent@npm:^3.0.0":
   version: 3.0.0
   resolution: "@npmcli/agent@npm:3.0.0"
@@ -2725,6 +2735,7 @@ __metadata:
     "@babel/core": "npm:^7.25.2"
     "@biomejs/biome": "npm:^2.0.5"
     "@expo/vector-icons": "npm:^14.1.0"
+    "@mitsuharu/react-native-components-plus": "npm:^0.1.1"
     "@react-native-async-storage/async-storage": "npm:^2.2.0"
     "@react-navigation/bottom-tabs": "npm:^7.3.10"
     "@react-navigation/elements": "npm:^2.3.8"
