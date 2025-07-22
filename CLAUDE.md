@@ -57,11 +57,11 @@ npm run reset-project
 - `src/app/` - Expo Router pages with file-based routing
   - `index.tsx`, `input.tsx`, `result.tsx`, `settings.tsx` - Core Q&A workflow screens
   - `_layout.tsx` - Stack navigation setup with dark mode support
-- `src/components/` - Reusable UI components (Button)
+- `src/components/` - Application-specific components
 - `src/constants/Colors.ts` - Centralized dark/light mode color system
 - `src/hooks/` - Custom React hooks (useAssistant for OpenAI integration)
 - `src/types/` - TypeScript type definitions (HistoryItem interface)
-- `src/utils/` - Utility functions (AsyncStorage operations, style typing)
+- `src/utils/` - Utility functions (AsyncStorage operations)
 
 ### Key Technical Implementation
 
@@ -116,6 +116,7 @@ OPENAI_API_KEY=sk-your-openai-api-key
 - **expo-speech** - Text-to-speech functionality
 - **openai** - OpenAI API integration
 - **react-native-swag-styles** - Dynamic styling with theme support
+- **@mitsuharu/react-native-components-plus** - Reusable UI components (Button) and utility functions (styleType)
 
 ### Development Tools
 - **@biomejs/biome** - Linting and formatting
@@ -176,8 +177,8 @@ const useStyles = makeStyles(() => useColorScheme(), (colorScheme) => {
 ```
 
 ### Type Safety
-- Uses `styleType<ViewStyle>()` and `styleType<TextStyle>()` for enhanced type safety
-- Centralized Button component replacing all Pressable instances
+- Uses `styleType<ViewStyle>()` and `styleType<TextStyle>()` from `@mitsuharu/react-native-components-plus` for enhanced type safety
+- Centralized Button component from `@mitsuharu/react-native-components-plus` replacing all Pressable instances
 - TypeScript interfaces for all data structures
 
 ## Data Management
