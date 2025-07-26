@@ -9,7 +9,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "biome check --write ./src",
-    "eas-build-pre-install": "corepack enable"
+    "eas-build-pre-install": "corepack enable",
+    "update:develop": "eas update --channel development"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -33,6 +34,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.9",
+    "expo-updates": "~0.28.17",
     "expo-web-browser": "~14.2.0",
     "openai": "^5.5.1",
     "react": "19.0.0",
